@@ -1,0 +1,192 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+** 1. Specify the project for the script.
+
+* Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF,
+    Trending = Yes,
+    ;
+
+****************************************************************************
+** 2. Run reduce.
+
+Reduce SmfFile = '%datafolder%\shelterins_smf7x.zrf',
+    SecondSmfFile = '%datafolder%\shelterins_smf42.zrf',
+    CommandFile = '%testprojectfolder%\shelter_reduce.txt',
+    ;
+
+****************************************************************************
+** 3. Run analyze.
+Analyze
+    CommandFile = '%testprojectfolder%\shelter_analyze.txt',
+    ;
+
+****************************************************************************
+** 4. Add analyzed data to database.
+
+DatabaseAdd
+    ;
+
+** Set Excel to autosave, and also create a separate workbook for each chart sheet
+Excel AutoSave = Yes, SeparateWorkbooks = Yes;
+
+****************************************************************************
+** 5. Set scope for subsequent reporting.
+
+ReportRange
+    Scope= Daily,
+    ;
+
+***************************************************************************
+** 6. Generate dashboard sheets.
+
+Dashboard
+     ;
+
+****************************************************************************
+** 7. Plot summary reports.
+
+ReportSummary
+     WorkloadSummary = Yes,
+     ResponseTimeComponents = Yes,
+     StorageGroup = Yes,
+     PerformanceSummary = Yes,
+     CachePerformance = Yes,
+     ShowDataFromVolumes = AllAndSelected,
+     ;
+
+****************************************************************************
+** 8. Plot advanced reports.
+
+ReportAdvanced
+    BusyDeviceDetail = Yes,
+    BusyDeviceSummary = Yes,
+    RaidRankReport = Yes,
+    AccessDensity = Yes,
+    ;
+
+****************************************************************************
+** 9. Plot breakdown reports.
+
+ReportBreakdown
+    BreakdownBy = StorageGroup,
+    ShowDataFromVolumes = Selected
+    ;
+
+ReportBreakdown
+    BreakdownBy = DSS,
+    ShowDataFromVolumes = Selected
+    ;
+
+ReportBreakdown
+    BreakdownBy = System,
+    ShowDataFromVolumes = Selected
+    ;
+
+ReportBreakdown
+    BreakdownBy = Sysplex,
+    ShowDataFromVolumes = Selected
+    ;
+
+ReportBreakdown BreakdownBy=(LSS, DSS='IBM-36971');
+ReportBreakdown BreakdownBy=(RanksDS8000, DSS='IBM-36971');
+ReportBreakdown BreakdownBy=(Ranks, DSS='IBM-36971');
+
+****************************************************************************
+** 11. Plot FICON and directors reports.
+
+ReportFicon
+    ChannelsPerSystem = Yes,
+    ChannelsPerMIFgroup = Yes,
+    ChannelsPerDSS = Yes,
+    ;
+
+****************************************************************************
+** 12. Plot PAV reports.
+
+ReportPAV
+    ChartsCurrent = Yes,
+    TablesCurrent = Yes,
+    Recommendations = Yes,
+    ChartsRequirements = Yes,
+    TablesRequirements = Yes,
+    ;
+
+****************************************************************************
+** 14. Export results to HTML.
+**     Export the results previously created to HTML files in the specified
+**     folder.
+
+*PublishHtml Folder = <string>;
+
+****************************************************************************
+** 15. Export charts to Powerpoint.
+**     Export all charts previously created to Powerpoint.
+**     Optionally specify a template to use for the Powerpoint presentation.
+
+*PowerPoint;
+*    Template = <string>;
+
+
+****************************************************************************
+** 16. Set scope for subsequent reporting.
+
+*ReportRange
+*    Scope= Weekly,
+*    ;
+
+***************************************************************************
+** 17. Generate dashboard sheets.
+
+*Dashboard
+*     ;
+
+****************************************************************************
+** 18. Plot summary reports.
+
+*ReportSummary
+*     WorkloadSummary = Yes,
+*     ResponseTimeComponents = Yes,
+*     StorageGroup = Yes,
+*     PerformanceSummary = Yes,
+*     CachePerformance = Yes,
+*     ShowDataFromVolumes = AllAndSelected,
+*     ;
+
+****************************************************************************
+** 19. Plot advanced reports.
+
+*ReportAdvanced
+*    BusyDeviceDetail = Yes,
+*    BusyDeviceSummary = Yes,
+*    RaidRankReport = Yes,
+*    AccessDensity = Yes,
+*    ;
+
+****************************************************************************
+** 20. Plot PAV reports.
+
+*ReportPAV
+*    ChartsCurrent = Yes,
+*    TablesCurrent = Yes,
+*    Recommendations = Yes,
+*    ChartsRequirements = Yes,
+*    TablesRequirements = Yes,
+*    ;
+
+****************************************************************************
+** 21. Close the project.
+**     Optionally close the project after running the script.
+
+CloseProject;
+
+****************************************************************************
+** 22. Exit the project.
+
+Exit;
+ 
+****************************************************************************

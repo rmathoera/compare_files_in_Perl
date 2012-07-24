@@ -1,0 +1,30 @@
+** Use case 3i - Design and implement tiered storage: variants for negative tests: e.g. changes between step 1 + 2 input file, wrong runid.  
+
+control   recommendation=devicebygroup, 
+          runid=UC3j, 
+          grouptolerance=0; 
+
+target    SATA1TB-1, 
+          number=20, 
+          size=(cylinders=6M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+target    SATA1TB-2, 
+          number=20, 
+          size=(cylinders=3M), 
+          type=(raid=raid1, technology=SATA, groupsize=8); 
+
+** make sure non-SMS managed devices are spread over arrays groups 
+** group     opensystem, group=%unk*; 
+** Group     pdasys, volser=pda*, target=FC146; 
+** Group     pdasys, volser=pd4*, target=FC146;
+** Group     public, volser=pwk*;
+** Group      akpol, volser=akv*, target=SATA1TB;
+** Group      akpol, volser=akm*;
+** Group      ttemp, volser=ptmp*;
+
+
+** selected storage systems to merge 
+* migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891); 
+
+migrate   dss=(IBM-73441, IBM-ADGZ1, IBM-AKYD1, IBM-CD871, IBM-CD891, IBM-CF701, IBM-CF711, IBM-DHBF1, IBM-DZ911, IBM-FBAR1, IBM-V4981, IBM-X0311, IBM-Y5561); 

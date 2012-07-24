@@ -1,15 +1,39 @@
-blib/
-.build/
-_build/
-cover_db/
-inc/
-Build
-Build.bat
-.last_cover_stats
-Makefile
-Makefile.old
-MANIFEST.bak
-META.yml
-MYMETA.yml
-nytprof.out
-pm_to_blib
+# Ignore files ending or starting with tildes
+~*
+*~
+
+# Run binaries
+/Run/t*
+/run/t*
+/run/Report*
+
+run/ReportGenerator/*
+
+# Result outputs
+/Results
+/Results/t*
+
+# Temporary folders
+/tmp*
+
+# Ignore Emacs TAGS files
+TAGS
+
+# Ignore msys stackdumps
+sh.exe.stackdump
+
+# Ignore merge and diff files
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
+
+# ignore temp files
+tmp_*
+Thumbs.db
+ftpexec*
+ftp.log
+
+# files / folders that are obsolete
+/scripts
+*.scc

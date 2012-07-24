@@ -1,0 +1,9 @@
+* Use case 5f - No volser declared empty. 
+
+control       recommendation=bestmoves,
+	      number=10,
+              runid=UC5F;
+
+*category empty, volser=*;
+
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891);      

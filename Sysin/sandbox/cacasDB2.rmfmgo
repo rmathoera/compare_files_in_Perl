@@ -1,0 +1,151 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+
+****************************************************************************
+* 1. Open/create the project.
+Project Name = '%testprojectfolder%', 
+        mode=StartWithCSV, Trending=yes;
+
+****************************************************************************
+* 2. Start with an empty database
+DatabaseEmpty;
+
+****************************************************************************
+** 3. Run reduce.
+Reduce
+    SmfFile = '%datafolder%\rmb.rmfpack.trial.zrf',
+    CommandFile = '%testprojectfolder%\cacasualty_reduce.txt'
+    ;
+
+****************************************************************************
+** 4. Run analyze.
+Analyze
+    CommandFile = '%testprojectfolder%\cacasualty_analyze.txt'
+    ;
+
+****************************************************************************
+** 5. Add analyzed data to database.
+DatabaseAdd;
+
+****************************************************************************
+* Set Excel to autosave, and also to create a separate workbook for each chart sheet
+Excel 
+    AutoSave = Yes, 
+    SeparateWorkbooks = Yes;
+
+** 5. Set scope for subsequent reporting.
+
+ReportRange 
+    Scope= Daily;
+
+
+****************************************************************************
+** 6. Plot the dashboard
+Dashboard;
+
+****************************************************************************
+** 7. Plot summary reports (5).
+
+ReportSummary
+     WorkloadSummary = LSS,
+     ResponseTimeComponents = LSS,
+     StorageGroup = Yes,
+     PerformanceSummary = LSS,
+     CachePerformance = LSS,
+     ShowDataFromVolumes = AllAndSelected,
+     ;
+
+****************************************************************************
+** 8. Plot advanced reports (3).
+
+ReportAdvanced
+    BusyDeviceDetail = Yes,
+    BusyDeviceSummary = Yes,
+    AccessDensity = LSS,
+    ;
+
+****************************************************************************
+** 9. Plot breakdown reports (5).
+**   In case you want to make a breakdown report for more than one BreakdownBy 
+**   option, repeat the ReportBreakDown command for each BreakdownBy option.
+**   For instance, to create link and rank charts for each disk subsystem in 
+**   your configuration, you would code two ReportBreakdown commands for
+**   each disk subsystem.
+
+ReportBreakdown
+    BreakdownBy = StorageGroup,
+*    ChartType = Bar, 
+    ShowDataFromVolumes = AllAndSelected
+    ;
+
+ReportBreakdown
+    BreakdownBy = DSS,
+*    ChartType = Bar, 
+    ShowDataFromVolumes = AllAndSelected
+    ;
+
+ReportBreakdown
+    BreakdownBy = System,
+*    ChartType = Bar, 
+    ShowDataFromVolumes = AllAndSelected
+    ;
+
+ReportBreakdown
+    BreakdownBy = Sysplex,
+*    ChartType = Bar, 
+    ShowDataFromVolumes = AllAndSelected
+    ;
+
+ReportBreakdown 
+    BreakdownBy=(LSS, DSS='EMC-01894');
+
+****************************************************************************
+** 10. Plot copy services reports.
+
+ReportCopyServices
+    PPRC = AllOptions,
+	;
+
+ReportCopyServices
+    XRC = AllOptions,
+	;
+
+ReportCopyServices
+    Recommendations = SYNC,
+	;
+
+ReportCopyServices
+    Recommendations = ASYNC,
+	;
+
+ReportCopyServices
+    Recommendations = XRC,
+	;
+
+ReportCopyServices
+    Recommendations = UNIVREPL,
+	;
+
+****************************************************************************
+** 11. Plot FICON and directors reports.
+
+ReportFicon
+    ChannelsPerSystem = Yes,
+    ChannelsPerMIFgroup = Yes,
+    ChannelsPerDSS = Yes,
+    ;
+
+****************************************************************************
+** 12. Plot PAV reports.
+
+ReportPAV
+    ChartsCurrent = LSS,
+    TablesCurrent = LSS,
+    Recommendations = Yes,
+    ChartsRequirements = LSS,
+    TablesRequirements = LSS,
+    ;
+

@@ -1,0 +1,18 @@
+* Use case 1a.q: Migrate to larger logical volumes based on device 
+* type 3390-3 to 3390-54; target size defined by devtype, 
+* group tolerance = 2. 
+
+control   recommendation=logical, 
+          runid=1AVQ, 
+          grouptolerance=2; 
+
+* “MOD3”  =  3 * 1113 =  3339 cylinders 
+* “MOD9”  =  9 * 1113 = 10017 cylinders 
+* “MOD54” = 54 * 1113 = 60102 cylinders 
+
+target    UC1AVQ, 
+          number=3,
+          size=(devtype=3390-54), 
+          type=(raid=raid5, technology=FC15K, HDDCAPACITY=146GB ); 
+
+migrate   group=IWDPOL;

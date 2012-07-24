@@ -1,0 +1,99 @@
+****************************************************************************
+** IntelliMagic script for automating Vision for SMI-S and TPC data transformation, load and reporting.
+** (C) IntelliMagic 2003-2010 
+**
+** Run from menu File -> Run Script...               
+** or Run from command line as RMFM4W.EXE /s <script file>
+****************************************************************************
+** 1. Specify the project for the script.
+
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMIS,  
+    Trending = yes,
+    ;
+****************************************************************************
+** 2. Run analyze.
+
+Analyze
+    CommandFile = '%testprojectfolder%\base735_smis_analyze.txt',
+    File = '%datafolder%\2010-08-03.zip',
+    File = '%datafolder%\2010-08-04.zip',
+    File = '%datafolder%\2010-08-05.zip',    
+    File = '%datafolder%\2010-08-06.zip',    
+    File = '%datafolder%\2010-08-07.zip',
+    ;
+****************************************************************************
+** 3. Add analyzed data to database.
+
+DatabaseAdd
+    ;
+****************************************************************************
+** 4. Set scope for subsequent reporting.
+**    By default reporting will act on the whole period of data in the 
+
+ReportRange
+    Scope= Daily, 
+*    Scope = Weekly, 
+*    Scope = Monthly, *n/a*
+*    Scope = Yearly,  *n/a*
+*    InterestGroup = <string>,
+*    Shift = <string>,
+*    Sysplex = <string>,
+*    Times = all |
+*        lastyear |
+*        lastwholeyear |
+*        lastmonth |  
+*        lastwholemonth |
+*        lastweek |
+*        lastNdays | 
+*        lastload
+    ;
+****************************************************************************
+** 5. Generate dashboard sheets.
+
+Dashboard
+    ;
+****************************************************************************
+** 6. Export results to HTML.
+**     Export the results previously created to HTML files in the specified
+**     folder.
+
+* PublishHtml Folder = '%testprojectfolder%\HTML';
+
+* Generate PowerPoint slides.
+*PowerPoint;
+
+****************************************************************************
+** 7. Plot charts or tables from the Vision Reporter
+**     This command exports all charts under one or all sets containsed within a focal point.
+**	   The name of the exported file wil have format <focalpoint>_<set>[_<suffix>].<output>
+**	   There can be more than one VisionReport command in the same script.
+**
+**	focalpoint (required) : Name of the focal point for which to run the export.
+**	set (optional) : Name of the set to export. If not specified all sets will be exported.
+**	output (required) : Format of the export
+**	suffix (optional) : Default is yyyyMMddHHmm. The suffix specifies the format of the label  appended to the filename. You need to enter a valid datetime format here. An empty suffix is also allowed. 
+**	generation (optional) : specifies how many previous versions of the export to retain in case a file already exists. Old versies get renumbered (lowest = newest, highest == oldest)
+**	copyToFixed (optional) : copy the main export file to fixed file name (i.e. excluding the suffix), so last generated file is available via fixed name.
+
+*VisionReport
+*	focalpoint = <string>
+*	set = <string>
+*	output = HTML | MHT | PDF 
+*	suffix = <string>
+*	generation = <whole number>
+*	copyToFixed = Yes | No
+
+
+****************************************************************************
+** 8. Close the project.
+**     Optionally close the project after running the script.
+
+CloseProject;
+****************************************************************************
+** 9. Exit out of IntelliMagic Vision 
+**     Optionally exit out of the IntelliMagic Vision application after closing the project.  This is recommended.
+
+Exit;
+****************************************************************************
+****************************************************************************

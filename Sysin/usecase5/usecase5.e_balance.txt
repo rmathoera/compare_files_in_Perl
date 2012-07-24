@@ -1,0 +1,13 @@
+* Use case 5e - Volsers ZDD* declared empty (67 in total),
+* where as no. moves=70, thus more than availble empty volsers. 
+
+control       recommendation=bestmoves,
+              number=70,
+	      runid=UC5E;
+
+category empty, volser=ZDD*; 
+
+* PDL * 4 of top 11 are of PDL* so we'll exclude them here.  
+* category unmoveable, volser=PDL*; 
+
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891);      

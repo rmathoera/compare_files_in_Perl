@@ -1,0 +1,17 @@
+[General]
+License=RMFGEN
+Version=5.2.3
+StartProject=ReadOnlyDB
+DBengine=DB2
+DBdriver=IBM DB2 ODBC DRIVER
+DBconnect=DSN=RMFMAGIC;
+ReadOnlyProject=1
+[DB2Z]
+DB2UDB=0
+AllowDBCreate=0
+Database=
+TableSpace=USERSPACE1
+Userid=CACASDB2
+SkipDeleteQueries=0
+[Trending]
+Enabled=1

@@ -1,0 +1,137 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+
+* Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF;
+
+* Run Reduce, analyze, and add data to database.
+Reduce SmfFile = '%datafolder%\td7x.zrf',
+    SecondSmfFile = '%datafolder%\td42.zrf',
+    CommandFile = '%testprojectfolder%\tdbank42_reduce.txt';
+
+Analyze CommandFile = '%testprojectfolder%\tdbank42_analyze.txt';
+
+DatabaseAdd;
+
+* Set Excel to autosave, and also to create a separate workbook for each chart sheet
+Excel AutoSave = Yes, SeparateWorkbooks = Yes;
+
+* Set scope for subsequent reporting (Interest Groups DBL, IGR & IGT).
+
+* RUN REPORTS FOR IGT
+ReportRange
+     InterestGroup = IGT;
+
+* Plot the dashboard.
+Dashboard;
+
+* Plot summary reports.
+ReportSummary
+     WorkloadSummary = Yes,
+     ResponseTimeComponents = Yes,
+     StorageGroup = Yes,
+     PerformanceSummary = Yes,
+     CachePerformance = Yes,
+     ShowDataFromVolumes = AllAndSelected;
+
+* Plot advanced reports.
+ReportAdvanced
+    BusyDeviceDetail = Yes,
+    BusyDeviceSummary = Yes,
+    RaidRankReport = Yes,
+    AccessDensity = Yes,
+* Plot DSN reports.
+    DatasetTop10 = Yes,
+    DatasetTable = Yes,
+    DatasetSSDReadDisc = Yes,
+    DatasetSSDReadMiss = Yes,
+    DatasetSSDReadMissSeq = Yes;
+
+* Plot breakdown reports.
+ReportBreakdown
+    BreakdownBy = StorageGroup,
+    ChartType = StackedArea, 
+    ShowDataFromVolumes = AllAndSelected;
+
+ReportBreakdown
+    BreakdownBy = DSS,
+    ChartType = StackedArea,
+    ShowDataFromVolumes = AllAndSelected; 	
+
+ReportBreakdown
+    BreakdownBy = System,
+    ChartType = StackedArea, 
+    ShowDataFromVolumes = AllAndSelected;
+
+ReportBreakdown
+    BreakdownBy = Sysplex,
+    ChartType = StackedArea, 
+    ShowDataFromVolumes = AllAndSelected;
+
+ReportBreakdown BreakdownBy=(Ranks, DSS='HTC-10103'), ShowDataFromVolumes=All;
+ReportBreakdown BreakdownBy=(Links, DSS='HTC-10103'), ShowDataFromVolumes=All;
+ReportBreakdown BreakdownBy=(LSS, DSS='HTC-10103'), ShowDataFromVolumes=AllAndSelected;
+ReportBreakdown BreakdownBy=(RanksDS8000, DSS='HTC-10103'), ShowDataFromVolumes=All;
+
+* Plot copy services reports.
+
+ReportCopyServices
+    Recommendations = ASYNC;
+	
+ReportCopyServices
+    Recommendations = XRC;
+
+ReportCopyServices
+    Recommendations = UNIVREPL;
+
+* Plot FICON and directors reports.
+ReportFicon
+    FCD = Yes,
+    FCDByDirector = Yes,
+
+    FCDByDirectorDSS = Yes,
+    FCDByDirectorLPAR = Yes,
+    FCDPortConfig = Yes,
+
+    ChannelsPerSystem = Yes,
+    ChannelsPerMIFgroup = Yes,
+    ChannelsPerDSS = Yes,
+    LinkConfiguration = Yes;
+ 
+* Plot PAV reports.
+ReportPAV
+    ChartsCurrent = Yes,
+    TablesCurrent = Yes,
+    Recommendations = Yes,
+    ChartsRequirements = Yes,
+    TablesRequirements = Yes;
+
+** RUN THE BREAKDOWN BY VOLUME REPORT (after release 522)
+** In BOTH DBL & IGR selects (but not possible with IGT)
+
+*ReportRange
+*  InterestGroup = DBL;
+
+*ReportBreakdown
+*  Breakdownby = Volume;
+
+*ReportRange
+*  InterestGroup = IGR;
+
+*ReportBreakdown
+*  Breakdownby = Volume;
+
+* Generate the HTML pages.
+PublishHtml 
+    Folder = '%testprojectfolder%\HTML';
+
+* Generate PowerPoint slides.
+PowerPoint;
+
+CloseProject;
+
+Exit;

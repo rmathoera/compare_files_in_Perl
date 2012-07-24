@@ -1,0 +1,18 @@
+* Use case 1A.g: Migrate to larger logical volumes: 
+* Device Type 3390-3/9 to 3390-54; target size defined by cylinders ( Raid10 )
+
+control   recommendation=logical, 
+          runid=1AVG, 
+          grouptolerance=1; 
+
+* “MOD3”  =  3 * 1113 =  3339 cylinders 
+* “MOD9”  =  9 * 1113 = 10017 cylinders 
+* “MOD54” = 54 * 1113 = 60102 cylinders 
+
+* (toggle number w/ something too small e.g. 20) 
+target    UC1AVG, 
+          number=3, 
+          size=(cylinders=60102), 
+          type=(raid=raid10, technology=FC15K, HDDCAPACITY=146GB ); 
+
+migrate   group=IWDPOL;

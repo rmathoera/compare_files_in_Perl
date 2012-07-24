@@ -1,0 +1,9 @@
+* Use case 5g - volser=ZDD* declared empty, but number=0. 
+
+control       recommendation=bestmoves,
+	      number=0,
+              runid=UC5G;
+
+category empty, volser=ZDD*;
+
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891);      

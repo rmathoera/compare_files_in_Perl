@@ -1,0 +1,39 @@
+220-FTPSERVE IBM FTP CS V1R12 at S0W1.DAL-EBIS.IHOST.COM, 10:07:25 on 2011-10-12.
+220 Connection will close if idle for more than 60 minutes.
+literal user imusgu1
+331 Send password please.
+literal pass tmlk910
+230 IMUSGU1 is logged on.  Working directory is "IMUSGU1.".
+cd ..
+250 "" is the working directory name prefix.
+ascii
+200 Representation type is Ascii NonPrint
+cd RMFMAGIC.TSUITE.BDIENST.JCL
+250 The working directory "RMFMAGIC.TSUITE.BDIENST.JCL" is a partitioned data set
+put reduce.txt reduce
+200 Port request OK.
+125 Storing data set RMFMAGIC.TSUITE.BDIENST.JCL(REDUCE)
+250-Statistics have been updated for the PDS member that was transferred
+250 Transfer completed successfully.
+1.227.55put analyze.txt analyze
+200 Port request OK.
+125 Storing data set RMFMAGIC.TSUITE.BDIENST.JCL(ANALYZE)
+250-Statistics have been updated for the PDS member that was transferred
+250 Transfer completed successfully.
+1.009.21put $2reduce.jcl $2reduce
+200 Port request OK.
+125 Storing data set RMFMAGIC.TSUITE.BDIENST.JCL($2REDUCE)
+250-Statistics have been updated for the PDS member that was transferred
+250 Transfer completed successfully.
+0.924.28put $3analze.jcl $3analze
+200 Port request OK.
+125 Storing data set RMFMAGIC.TSUITE.BDIENST.JCL($3ANALZE)
+250-Statistics have been updated for the PDS member that was transferred
+250 Transfer completed successfully.
+0.893.63put $4dbload.jcl $4dbload
+200 Port request OK.
+125 Storing data set RMFMAGIC.TSUITE.BDIENST.JCL($4DBLOAD)
+250-Statistics have been updated for the PDS member that was transferred
+250 Transfer completed successfully.
+1.9412.58quit
+221 Quit command received. Goodbye.

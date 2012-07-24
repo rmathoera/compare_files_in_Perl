@@ -1,0 +1,310 @@
+**-------------------------------------------------------------------           
+** Template ANALYZE step input file                                             
+**-------------------------------------------------------------------           
+** Use the analyze input to:                                                    
+** 1. Define the Interest groups                                                
+** 2. Define level of detail in device reporting                                
+** 3. Set general analysis options                                              
+** 4. Optionally define custom reports (define must be before                   
+**    use in interest group command)                                            
+** 5. Optionally generate Disk Magic Command (DMC) files                        
+** 6. Optionally create TopN CSV files                                          
+**                                                                              
+** RMF Magic (C) 2003-2008 IntelliMagic                                         
+**                                                                              
+** This sample input member is formatted as follows:                            
+** - lines starting with 2 asterisks are true comment lines and                 
+**   should not be changed.                                                     
+** - lines starting with a single asterisk contain a command that               
+**   you may activate by removing the asterisk.                                 
+** - lines that do not start with an asterisk contain a command that            
+**   you probably need for your (initial) run. You may need to                  
+**   modify the parameter selection and/or settings.                            
+**                                                                              
+**-------------------------------------------------------------------           
+** 1. Define report header and page length                                      
+**    (Define long page to avoid intermediate page headers)                     
+**-------------------------------------------------------------------           
+PRINT title='RMF Magic Analyze', pagelen=999;                                   
+**                                                                              
+**-------------------------------------------------------------------           
+** 2. ANALYZE command                                                           
+**-------------------------------------------------------------------           
+**    (a) Override high return code from REDUCE                                 
+**        (be sure to understand reason for high return code first!)            
+**                                                                              
+ANALYZE,reducerc=12;                                                                  
+**                                                                              
+**    (b) Limit number of devices per interval (for Dashboard)                  
+**                                                                              
+* ANALYZE,                                                                      
+*   activedevicemax=1024;                                                       
+**                                                                              
+**    (c) Show only devices with at least 50 ms busy time per second            
+**        (1 I/O of 50 ms, or 25 of 2 ms each)                                  
+**                                                                              
+ANALYZE,                                                                        
+  activedeviceintensity=50;                                                     
+**    
+**    (d)  enabling trending
+**
+**
+ANALYZE SYNC=00,TOPN=20,NOEMPTYINTERVALS;                                                                       
+**-------------------------------------------------------------------           
+** 3. Define an interest group that covers everything.                          
+**    See below for more detailed examples.                                     
+**-------------------------------------------------------------------           
+*INTERESTGROUP IGT,                                                              
+*    select=all,   
+*    exclude=(DSS=(MN01L,MN05L),VOLSER=(za*,zx*)), 
+*    busydevice=(criterion=iorate, threshold=95),
+*    top10=(criterion=mbs),
+*    dmc=(topn,device,PPRC,GEOXPARM);                               
+
+**                                                                              
+**-------------------------------------------------------------------           
+** 4. Define a custom report.                                                   
+**    Define an interest group that uses the custom report.                     
+**    (DEFINE command must preceed INTERESTGROUP command!)                      
+**-------------------------------------------------------------------           
+* DEFINE REPORT dsie, type=dss, row,                                            
+*   title='Use fields that GUI does not have',                                  
+*   col=(date, time, iorate, popservice, pending, poppending,                   
+*   iosq, popiosq, connect, popconnect, disconnect, popdisconnect);             
+* DEFINE REPORT dsie, type=dev, row,                                            
+*   title='Use fields that GUI does not have',                                  
+*   col=(date, time, iorate, connect, popconnect, disconnect, popdisconnect);
+**                                                                              
+INTERESTGROUP IG2,                                                            
+   select=all, 
+   exclude=(DSS=(MN01L,MN05L),VOLSER=(za*,zx*)),
+   busydevice=(criterion=iorate,threshold=25);                                
+*   report=(dsie);                                                              
+**                                                                              
+**-------------------------------------------------------------------           
+** 5. Define an interest group that covers everything.                          
+**    Create top-n reports based on MB /sec.                                    
+**    Generate Disk Magic Control (DMC) files based on top-n reports.           
+**-------------------------------------------------------------------           
+**                                                                              
+* INTERESTGROUP IG3,                                                            
+*   select=all, 
+*   exclude=(DSS=(MN01L,MN05L),VOLSER=(za*,zx*)), 
+*   topn=(criterion=popdisconnect,type=devicelevel);                                                 *              
+*   busydevice=(criterion=mbs, threshold=3),                                    
+*   top10=(criterion=mbs),                                                      
+*   dmc=(topn, lcu);                                                            
+**                                                                              
+**-------------------------------------------------------------------           
+** 6. Define an interest group based on date and time selection.                
+**-------------------------------------------------------------------           
+**                                                                              
+* INTERESTGROUP IG4,                                                              
+*    select=all,   
+*    topn=(criterion=mbs),
+*    exclude=(DSS=(MN01L,MN05L),VOLSER=(za*,zx*)), 
+*    busydevice=(criterion=iorate, threshold=300);                 
+**                                                                              
+**-------------------------------------------------------------------           
+** 7. Define an interest group that covers the same time period                 
+**    for every day.                                                            
+**-------------------------------------------------------------------           
+**                                                                              
+* INTERESTGROUP IG7,                                                            
+*   select=all,                                                                 
+*   interval=(start=(time='12:00:00'), end=(time='15:45:02'));                  
+**                                                                              
+**-------------------------------------------------------------------           
+** 8. Define an interest group that                                             
+**    (a) discards all information for disk subsystems other than               
+**        the two specified in LIMITTO.                                         
+**    (b) selects volumes that are in storage groups with names                 
+**        starting with GRP1 or GRP2.                                           
+**-------------------------------------------------------------------           
+* INTERESTGROUP IG8,                                                            
+*   limitto=(dss=(IBM-12352,IBM-24567)),                                        
+*   select=(group=(GRP1*, GRP2*));                                              
+**                                                                              
+**-------------------------------------------------------------------           
+** 9. Define an interest group that includes all volumes in any of              
+**    the three named storage groups AND any volume with a volser               
+**    that matches any of the mask definitions.                                 
+**-------------------------------------------------------------------           
+**                                                                              
+* INTERESTGROUP IG9,                                                            
+* select=(group=(group1, group2)),                                              
+* select=(volser=(vol%%1, vol%%2, DB1*, DB3*, %%DBHJ));                         
+**                                                                              
+**-------------------------------------------------------------------           
+** 10. Define an interest group that includes those volumes in any              
+**     of the three named storage groups that have a volser that                
+**     matches any of the mask definitions.                                     
+**-------------------------------------------------------------------           
+**                                                                              
+* INTERESTGROUP IGA,                                                            
+* select=(group=(GRP001, GRP002, GRP003),                                       
+*        (volser=(vol%%1, vol%%2, DB1*, DB3*, %%DBHJ)));                        
+**                                                                              
+**-------------------------------------------------------------------           
+** 11. Define an Volumes                                                        
+**     of the three named storage groups that have a volser that                
+**     matches any of the mask definitions.                                     
+**-------------------------------------------------------------------           
+** volume devtype=3390-27,                                                      
+** include=(devnum=((4F16,4F20),(4F4A),(4F4C)));                                
+**                                                                              
+
+VOLUME devtype=3390-27,include=(devnum=(,                                       
+   (2C08,2C0A),(2C48,2C4A),(2C88,2C8A),(2CC8,2CCA),                             
+   (2D08,2D0A),(2D48,2D4A),(2D88,2D8A),(2DC8,2DCA),(3A08,3A0A),                 
+   (3A48,3A4A),(3A88,3A8A),(3AC8,3ACA),(3B08,3B0A),(3B48,3B4A),                 
+   (3B88,3B8A),(3BC8,3BCA),(4508,450A),(4548,454A),(4588,458A),                 
+   (45C8,45CA),(4622,463C),(4672,468C),(46C2,46DC),(4712,472C),                 
+   (4760,477C),(47B0,47CC),(4800,481C),(4850,486C),(48A0,48BC),                 
+   (48F0,490C),(4941,495B),(4991,49AB),(49E1,49FB),(4A31,4A4B),                 
+   (4A81,4A9B),(4AD1,4AEB),(4B21,4B3B),(4B71,4B8B),(4BC1,4BDB),                 
+   (4C11,4C2B),(4C61,4C7B),(4CB1,4CCB),(4D01,4D1B),(4D51,4D6B),                 
+   (4DA1,4DBB),(4DF1,4E0B),(4E41,4E5B),(4E91,4EAB),(4F20,4F3D),                 
+   (4F70,4F8D),(4FC0,4FDD),(5010,502D),(5060,507D),(50B0,50CD),                 
+   (5100,511D),(5150,516D),(51A0,51BD),(51F0,520D),(5240,525D),                 
+   (5290,52AD),(52E0,52FD),(5330,534D),(5380,539D),(53D0,53ED),                 
+   (5420,543D),(5470,548D),(54C0,54DD),(5510,552D),(5560,557D),                 
+   (55B0,55CD),(5600,561D),(5650,566D),(56A0,56BD),(56F0,570D),                 
+   (5740,575D),(5790,57AD),(57CE,57D9),(57EE,57F9),(7B21,7B42),                 
+   (7B71,7B92),(7BC1,7BE2),(7C11,7C32),(7C61,7C82),(7CB1,7CD2),                 
+   (7D01,7D22),(7D51,7D72),(7DA1,7DC2),(7DF1,7E12),(7E41,7E62),                 
+   (7E91,7EB2),(7EE1,7F02),(7F31,7F52),(7F81,7FA2),(7FD1,7FF2),                 
+   (8021,8042),(8071,8092),(80C1,80E2),(8111,8132),(8160,8181),                 
+   (81B0,81D1),(8200,8221),(8250,8271),(82A0,82C1),(82F0,8311),                 
+   (8340,8361),(8390,83B1),(83E0,8401),(8430,8451),(8480,84A1),                 
+   (84D0,84F1),(8E0D,8E1A),(8E4D,8E5A),(8E8D,8E9A),(8ECD,8EDA),                 
+   (8F0D,8F1A),(8F4D,8F5A),(8F8D,8F9A),(8FCD,8FDA),(90AB,90BA),                 
+   (90EB,90FA),(912B,913A),(916B,917A),(91AB,91BA),(91EB,91FA),                 
+   (922B,923A),(926B,927A),(92AB,92BA),(92EB,92FA),(932B,933A),                 
+   (936B,937A),(93AC,93BB),(93EC,93FB),(942C,943B),(946C,947B),                 
+   (94AC,94BB),(94EC,94FB),(952C,953B),(956C,957B),(95AB,95BA),                 
+   (95EB,95FA),(9606,962F),(9646,966F),(9686,96AF),(96C6,96EF),                 
+   (9706,972F),(9746,976F),(9786,97AF),(97C6,97EF),(9806,982F),                 
+   (9846,986F),(9886,98AE),(98C6,98EE),(9906,992E),(9946,996E),                 
+   (9986,99AF),(99C6,99EF),(9A06,9A2F),(9A46,9A6F),(9A86,9AAF),                 
+   (9AC6,9AEF),(9B06,9B2F),(9B46,9B6F),(9B86,9BAF),(9BC6,9BEF),                 
+   (9C06,9C2F),(9C46,9C6F),(9C84,9C97),(9CA4,9CB7),(B383,B389),                 
+   (B3D3,B3D9),(B423,B429),(B473,B479),(B4C3,B4C9),(B513,B519),                 
+   (B563,B569),(B5B3,B5B9),(B603,B609),(B653,B659),(C00D,C01C),                 
+   (C02D,C03C),(C04D,C05C),(C06D,C07C),(C08D,C09C),(C0AD,C0BC),                 
+   (C0CD,C0DC),(C0ED,C0FC),(C10D,C11B),(C12D,C13B),(C14D,C15B),                 
+   (C16D,C17B),(C18D,C19B),(C1AD,C1BB),(C1CD,C1DB),(C1ED,C1FB),                 
+   (C943,C969),(C983,C9A9),(C9C2,C9E8),(CA02,CA28),(CA42,CA68),                 
+   (CA82,CAA8),(CAC3,CAE9),(CB03,CB29),(CB43,CB69),(CB83,CBA9),                 
+   (CBC4,CBE9),(CC04,CC29),(CC44,CC69),(CC84,CCA9),(CCC4,CCE9),                 
+   (CD04,CD29),(CD43,CD68),(CD83,CDA8),(CDC3,CDE8),(CE03,CE28),                 
+   (CE43,CE68),(CE83,CEA8),(CEC3,CEE8),(CF03,CF28),(CF42,CF54),                 
+   (CF62,CF74),(D50C,D531),(D55C,D581),(D5AC,D5D1),(D5FC,D621),                 
+   (D64C,D671),(D69C,D6C1),(D6EC,D711),(D73C,D761),(D78C,D7B1),                 
+   (D7DC,D801),(D82C,D851),(D87C,D8A1),(D8CC,D8F1),(D91C,D941),                 
+   (D96A,D979),(D9A2,D9B1),(D9DB,D9E2),(DE37,DE3B),(DF37,DF3B),                 
+   (F80D,F81C),(F82D,F83C),(F84D,F85C),(F86D,F87C),(F88D,F89C),                 
+   (F8AD,F8BC),(F8CD,F8DC),(F8ED,F8FC),(F90D,F91B),(F92D,F93B),                 
+   (F94D,F95B),(F96D,F97B),(F98D,F99B),(F9AD,F9BB),(F9CD,F9DB),                 
+   (F9ED,F9FB)));                                                               
+**                                                                              
+** volume devtype=3390-54,                                                      
+** include=(devnum=((4F21,4F28),(4F30),(4F33),(4F40)));                         
+**
+                                                                           
+VOLUME devtype=3390-54,include=(devnum=(,                                       
+   (2C0B,2C3B),(2C4B,2C7B),(2C8B,2CBB),(2CCB,2CFB),(2D0B,2D3B),                 
+   (2D4B,2D7B),(2D8B,2DBB),(2DCB,2DFB),(3A0B,3A3B),(3A4B,3A7B),                 
+   (3A8B,3ABB),(3ACB,3AFB),(3B0B,3B3B),(3B4B,3B7B),(3B8B,3BBB),                 
+   (3BCB,3BFB),(450B,453B),(454B,457B),(458B,45BB),(45CB,45FB),                 
+   (463D,464F),(468D,469F),(46DD,46EF),(472D,473F),(477D,478F),                 
+   (47CD,47DF),(481D,482F),(486D,487F),(48BD,48CF),(490D,491F),                 
+   (495C,496F),(49AC,49BF),(49FC,4A0F),(4A4C,4A5F),(4A9C,4AAF),                 
+   (4AEC,4AFF),(4B3C,4B4F),(4B8C,4B9F),(4BDC,4BEF),(4C2C,4C3F),                 
+   (4C7C,4C8F),(4CCC,4CDF),(4D1C,4D2F),(4D6C,4D7F),(4DBC,4DCF),                 
+   (4E0C,4E1F),(4E5C,4E6F),(4EAC,4EBF),(4F3E,4F4F),(4F8E,4F9F),                 
+   (4FDE,4FEF),(502E,503F),(507E,508F),(50CE,50DF),(511E,512F),                 
+   (516E,517F),(51BE,51CF),(520E,521F),(525E,526F),(52AE,52BF),                 
+   (52FE,530F),(534E,535F),(539E,53AF),(53EE,53FF),(543E,544F),                 
+   (548E,549F),(54DE,54EF),(552E,553F),(557E,558F),(55CE,55DF),                 
+   (561E,562F),(566E,567F),(56BE,56CF),(570E,571F),(575E,576F),                 
+   (57AE,57BF),(57DA,57DD),(57FA,57FD),(7B43,7B4F),(7B93,7B9F),                 
+   (7BE3,7BEF),(7C33,7C3F),(7C83,7C8E),(7CD3,7CDE),(7D23,7D2E),                 
+   (7D73,7D7E),(7DC3,7DCE),(7E13,7E1E),(7E63,7E6E),(7EB3,7EBE),                 
+   (7F03,7F0E),(7F53,7F5E),(7FA3,7FAE),(7FF3,7FFE),(8043,804E),                 
+   (8093,809E),(80E3,80EE),(8133,813E),(8182,818D),(81D2,81DD),                 
+   (8222,822D),(8272,827D),(82C2,82CD),(8312,831D),(8362,836D),                 
+   (83B2,83BD),(8402,840D),(8452,845D),(84A2,84AD),(84F2,84FD),                 
+   (8E1B,8E3E),(8E5B,8E7E),(8E9B,8EBE),(8EDB,8EFE),(8F1B,8F3E),                 
+   (8F5B,8F7E),(8F9B,8FBE),(8FDB,8FFE),(9009,9012),(9049,9052),                 
+   (90BB,90BF),(90FB,90FF),(913B,913F),(917B,917F),(91BB,91BF),                 
+   (91FB,91FF),(923B,923F),(927B,927F),(92BB,92BF),(92FB,92FF),                 
+   (933B,933F),(937B,937F),(93BC,93BF),(93FC,93FF),(943C,943F),                 
+   (947C,947F),(94BC,94BF),(94FC,94FF),(953C,953F),(957C,957F),                 
+   (95BB,95BF),(95FB,95FF),(9630,963F),(9670,967F),(96B0,96BF),                 
+   (96F0,96FF),(9730,973F),(9770,977F),(97B0,97BF),(97F0,97FF),                 
+   (9830,983F),(9870,987F),(98AF,98BF),(98EF,98FF),(992F,993F),                 
+   (996F,997F),(99B0,99BF),(99F0,99FF),(9A30,9A3F),(9A70,9A7F),                 
+   (9AB0,9ABF),(9AF0,9AFF),(9B30,9B3F),(9B70,9B7F),(9BB0,9BBF),                 
+   (9BF0,9BFF),(9C30,9C3F),(9C70,9C7F),(9C98,9C9F),(9CB8,9CBF),                 
+   (B38A,B3BF),(B3DA,B40F),(B42A,B45F),(B47A,B4AF),(B4CA,B4FF),                 
+   (B51A,B54F),(B56A,B59F),(B5BA,B5EF),(B60A,B63F),(B65A,B68F),                 
+   (C96A,C97F),(C9AA,C9BF),(C9E9,C9FF),(CA29,CA3F),(CA69,CA7F),                 
+   (CAA9,CABF),(CAEA,CAFF),(CB2A,CB3F),(CB6A,CB7F),(CBAA,CBBF),                 
+   (CBEA,CBFF),(CC2A,CC3F),(CC6A,CC7F),(CCAA,CCBF),(CCEA,CCFF),                 
+   (CD2A,CD3F),(CD69,CD7F),(CDA9,CDBF),(CDE9,CDFF),(CE29,CE3F),                 
+   (CE69,CE7F),(CEA9,CEBF),(CEE9,CEFF),(CF29,CF3F),(CF55,CF5F),                 
+   (CF75,CF7F),(D532,D54F),(D582,D59F),(D5D2,D5EF),(D622,D63F),                 
+   (D672,D68F),(D6C2,D6DF),(D712,D72F),(D762,D77F),(D7B2,D7CF),                 
+   (D802,D81F),(D852,D86F),(D8A2,D8BF),(D8F2,D90F),(D942,D95F),                 
+   (D97A,D997),(D9B2,D9CF),(D9E3,D9E7)));
+
+** 12. Define workloads
+**-------------------------------------------------------------------           
+** WORKLOAD <name>,
+**         include=(
+**            dss=(name1,...,nameN),
+**            devnum=((begin1, end1),..,(beginN, endN), (devnumA), ..., (devnumN)),
+**            volser=(mask1,...,maskN),
+**            group=(mask1,...,maskN),
+**         exclude=(
+**            dss=(name1,...,nameN),
+**            devnum=((begin1, end1),..,(beginN, endN), (devnumA), ..., (devnumN)),
+**            volser=(mask1,...,maskN),
+**            group=(mask1,...,maskN);
+
+VOLGROUP SUB1, select=(devnum=(,                                       
+   (2C08,2C0A),(2C48,2C4A),(2C88,2C8A),(2CC8,2CCA),                             
+   (2D08,2D0A),(2D48,2D4A),(2D88,2D8A),(2DC8,2DCA),(3A08,3A0A),                 
+   (3A48,3A4A),(3A88,3A8A),(3AC8,3ACA),(3B08,3B0A),(3B48,3B4A),                 
+   (3B88,3B8A),(3BC8,3BCA),(4508,450A),(4548,454A),(4588,458A),                 
+   (45C8,45CA),(4622,463C),(4672,468C),(46C2,46DC),(4712,472C),                 
+   (4760,477C),(47B0,47CC),(4800,481C),(4850,486C),(48A0,48BC),                 
+   (48F0,490C),(4941,495B),(4991,49AB),(49E1,49FB),(4A31,4A4B),                 
+   (4A81,4A9B),(4AD1,4AEB),(4B21,4B3B),(4B71,4B8B),(4BC1,4BDB),                 
+   (4C11,4C2B),(4C61,4C7B),(4CB1,4CCB),(4D01,4D1B),(4D51,4D6B),                 
+   (4DA1,4DBB),(4DF1,4E0B),(4E41,4E5B),(4E91,4EAB),(4F20,4F3D),                 
+   (4F70,4F8D),(4FC0,4FDD),(5010,502D),(5060,507D),(50B0,50CD),                 
+   (5100,511D),(5150,516D),(51A0,51BD),(51F0,520D),(5240,525D),                 
+   (5290,52AD),(52E0,52FD),(5330,534D),(5380,539D),(53D0,53ED),                 
+   (5420,543D),(5470,548D),(54C0,54DD),(5510,552D),(5560,557D),                 
+   (55B0,55CD),(5600,561D),(5650,566D),(56A0,56BD),(56F0,570D),                 
+   (5740,575D),(5790,57AD),(57CE,57D9),(57EE,57F9))); 
+VOLGROUP SUB2, select=(devnum=(,                                       
+   (2C0B,2C3B),(2C4B,2C7B),(2C8B,2CBB),(2CCB,2CFB),(2D0B,2D3B),                 
+   (2D4B,2D7B),(2D8B,2DBB),(2DCB,2DFB),(3A0B,3A3B),(3A4B,3A7B),                 
+   (3A8B,3ABB),(3ACB,3AFB),(3B0B,3B3B),(3B4B,3B7B),(3B8B,3BBB),                 
+   (3BCB,3BFB),(450B,453B),(454B,457B),(458B,45BB),(45CB,45FB),                 
+   (463D,464F),(468D,469F),(46DD,46EF),(472D,473F),(477D,478F),                 
+   (47CD,47DF),(481D,482F),(486D,487F),(48BD,48CF),(490D,491F),                 
+   (495C,496F),(49AC,49BF),(49FC,4A0F),(4A4C,4A5F),(4A9C,4AAF),                 
+   (4AEC,4AFF),(4B3C,4B4F),(4B8C,4B9F),(4BDC,4BEF),(4C2C,4C3F),                 
+   (4C7C,4C8F),(4CCC,4CDF),(4D1C,4D2F),(4D6C,4D7F),(4DBC,4DCF),                 
+   (4E0C,4E1F),(4E5C,4E6F),(4EAC,4EBF),(4F3E,4F4F),(4F8E,4F9F),                 
+   (4FDE,4FEF),(502E,503F),(507E,508F),(50CE,50DF),(511E,512F),                 
+   (516E,517F),(51BE,51CF),(520E,521F),(525E,526F),(52AE,52BF),                 
+   (52FE,530F),(534E,535F),(539E,53AF),(53EE,53FF),(543E,544F),                 
+   (548E,549F),(54DE,54EF),(552E,553F),(557E,558F),(55CE,55DF),                 
+   (561E,562F),(566E,567F),(56BE,56CF),(570E,571F),(575E,576F),                 
+   (57AE,57BF),(57DA,57DD),(57FA,57FD)));
+VOLGROUP TTL, select=all; 

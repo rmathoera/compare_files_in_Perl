@@ -1,0 +1,25 @@
+** Use case 2L - Migrate all selected storage systems to new single tier 
+** hardware.
+** 
+** SATA 1TB single tier:  40 array groups, 4M cylinders,  
+** raid6, SATA, 32 disks/rank, group tolerance 0
+**
+** grouptolerance = 100
+
+control   recommendation=device, 
+          runid=UC2L, 
+          grouptolerance=100; 
+
+target    SATA1TB, 
+          number=40, 
+          size=(cylinders=22M), 
+          type=(raid=raid6, technology=SATA, groupsize=32); 
+
+** make sure non-SMS managed devices are spread over arrays groups 
+** customize this for your installation 
+group     opensystem, group=%unk*; 
+
+** selected storage systems to merge 
+migrate   dss=(IBM-73441, IBM-ADGZ1, IBM-AKYD1, IBM-CD871, IBM-CD891, IBM-CF701, IBM-CF711, IBM-DHBF1, IBM-DZ911, IBM-FBAR1, IBM-V4981, IBM-X0311, IBM-Y5561); 
+
+

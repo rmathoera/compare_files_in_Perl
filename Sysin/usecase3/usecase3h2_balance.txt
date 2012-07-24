@@ -1,0 +1,189 @@
+** Use case 3H - Assign storage groups in two-tiered environment, 
+** 32 targets
+
+control   recommendation=devicebygroup, 
+          runid=UC3H, 
+          grouptolerance=0; 
+
+
+target    FC146-1, 
+          number=2, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC146-2, 
+          number=2, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC146-3, 
+          number=2, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC146-4, 
+          number=2, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC146-5, 
+          number=2, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC146-6, 
+          number=2, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC146-7, 
+          number=2, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC146-8, 
+          number=2, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+ 
+
+target    FC300-1, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC300-2, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC300-3, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC300-4, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC300-5, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC300-6, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC300-7, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC300-8, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+
+
+target    FC450-1, 
+          number=2, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC450-2, 
+          number=2, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC450-3, 
+          number=2, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC450-4, 
+          number=2, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC450-5, 
+          number=2, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC450-6, 
+          number=2, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC450-7, 
+          number=2, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC450-8, 
+          number=2, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+
+target    SSD300-1, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+target    SSD300-2, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+target    SSD300-3, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+target    SSD300-4, 
+          number=2, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+
+target    SATA1TB-1, 
+          number=10, 
+          size=(cylinders=6M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+target    SATA1TB-2, 
+          number=10, 
+          size=(cylinders=6M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+target    SATA1TB-3, 
+          number=10, 
+          size=(cylinders=6M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+target    SATA1TB-4, 
+          number=10, 
+          size=(cylinders=6M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+
+** make sure non-SMS managed devices are spread over arrays groups 
+** group     opensystem, group=%unk*; 
+** Group     pdasys, volser=pda*, target=FC146; 
+** Group     pdasys, volser=pd4*, target=FC146;
+** Group     public, volser=pwk*;
+** Group      akpol, volser=akv*, target=SATA1TB;
+** Group      akpol, volser=akm*;
+** Group      ttemp, volser=ptmp*;
+
+
+** selected storage systems to merge 
+* migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891); 
+
+migrate   dss=(IBM-73441, IBM-ADGZ1, IBM-AKYD1, IBM-CD871, IBM-CD891, IBM-CF701, IBM-CF711, IBM-DHBF1, IBM-DZ911, IBM-FBAR1, IBM-V4981, IBM-X0311, IBM-Y5561); 

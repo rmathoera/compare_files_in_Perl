@@ -1,0 +1,76 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+** 1. Specify the project for the script.
+
+* Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF,
+    Trending = Yes,
+    ;
+
+****************************************************************************
+** 2. Run reduce.
+
+Reduce 
+    SmfFile = '%datafolder%\FITB.d110328.smf7X.zrf',
+    SmfFile = '%datafolder%\FITB.d110328.smf42.zrf',
+    CommandFile = '%datafolder%\53bank_reduce.txt',
+    ArrayFile = '%datafolder%\FITB.d110328.v1993mir',
+    ArrayFile = '%datafolder%\FITB.d110328.v2009mir',
+    ;
+
+****************************************************************************
+** 3. Run analyze.
+Analyze
+    CommandFile = '%datafolder%\53bank_analyze.txt',
+    ;
+
+****************************************************************************
+** 4. Add analyzed data to database.
+DatabaseAdd 
+    Channels = Yes;
+
+** Set Excel to autosave, and also create a separate workbook for each chart sheet
+Excel 
+    AutoSave = Yes, 
+    SeparateWorkbooks = Yes;
+
+****************************************************************************
+** 5. a. Run RAID Group Set Report (checkbox1)
+**    b. Run Create Report Page Per DSS (checkbox2)
+**    c. Run Physical Drive Activity & Mapping Reports (checkbox3)
+
+ReportAdvanced
+    RaidRankReport = DSS, 
+    PHYSICALDRIVE = Yes;
+ 
+****************************************************************************
+** 6. Run RAID Group Set Breakdown Reports
+
+ReportBreakdown BreakdownBy=(LSS, DSS='EMC-01993'), ShowDataFromVolumes=AllAndSelected;
+ReportBreakdown BreakdownBy=(LSS, DSS='EMC-20895'), ShowDataFromVolumes=AllAndSelected;
+ReportBreakdown BreakdownBy=(LSS, DSS='EMC-AAKDX'), ShowDataFromVolumes=AllAndSelected;
+ReportBreakdown BreakdownBy=(LSS, DSS='IBM-CM821'), ShowDataFromVolumes=AllAndSelected;
+
+ReportBreakdown BreakdownBy=(Ranks, DSS='EMC-01993'), ShowDataFromVolumes=All;
+ReportBreakdown BreakdownBy=(Ranks, DSS='IBM-CM821'), ShowDataFromVolumes=All;
+
+ReportBreakdown BreakdownBy=(Links, DSS='IBM-CM821'), ShowDataFromVolumes=All;
+
+ReportBreakdown BreakdownBy=(RanksDS8000, DSS='IBM-CM821'), ShowDataFromVolumes=All;
+
+****************************************************************************
+** 7. Close the project.
+
+CloseProject;
+
+****************************************************************************
+** 8. Exit out of IntelliMagic Vision 
+**     Optionally exit out of the IntelliMagic Vision application after closing the project.  This is recommended.
+
+Exit;
+****************************************************************************
+****************************************************************************

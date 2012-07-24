@@ -1,0 +1,159 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+** 1. Specify the project for the script.
+* Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF,
+    Trending = yes,
+    ;
+
+****************************************************************************
+** 2. Run reduce.
+Reduce
+    SmfFile = '%datafolder%\Wells_r7x.zrf',
+    CommandFile = '%testprojectfolder%\wellsfargo_reduce.txt';
+    ;
+
+****************************************************************************
+** 3. Run analyze.
+Analyze
+    CommandFile = '%testprojectfolder%\wellsfargo_analyze.txt',
+    ;
+
+****************************************************************************
+** 4. Add analyzed data to database.
+DatabaseAdd
+    ;
+
+* Set Excel to autosave, and also to create a separate workbook for each chart sheet
+Excel AutoSave = Yes, SeparateWorkbooks = Yes;
+
+****************************************************************************
+** 5. SET SCOPE For Subsequent Reporting (Daily)
+
+ReportRange
+    Scope = Daily,
+    ;
+
+****************************************************************************
+** 6. Plot summary report (Volume Group Summary Charts).
+
+ReportSummary
+    volumeGroup = Yes
+    ShowDataFromVolumes = All,
+    ;
+
+****************************************************************************
+** 7. Plot Volume Group Breakdown reports.
+
+ReportBreakdown
+    BreakdownBy = VolumeGroup,
+    ChartType = Default,
+    ;
+
+****************************************************************************
+** 8. SET SCOPE For Subsequent Reporting (Weekly)
+
+ReportRange
+    Scope = Weekly,
+    ;
+
+****************************************************************************
+** 9. Plot summary report (Volume Group Summary Charts).
+
+ReportSummary
+    volumeGroup = Yes
+    ShowDataFromVolumes = All,
+    ;
+
+****************************************************************************
+** 10. Plot Volume Group Breakdown reports.
+
+ReportBreakdown
+    BreakdownBy = VolumeGroup,
+    ChartType = Default,
+    ;
+
+****************************************************************************
+** 11. SET SCOPE For Subsequent Reporting (Monthly)
+
+ReportRange
+    Scope = Monthly,
+    ;
+
+****************************************************************************
+** 12. Plot summary report (Volume Group Summary Charts).
+
+ReportSummary
+    volumeGroup = Yes
+    ShowDataFromVolumes = All,
+    ;
+
+****************************************************************************
+** 13. Plot Breakdown reports (Volume Group & Storage Group).
+
+ReportBreakdown
+    BreakdownBy = StorageGroup,
+    ChartType = Default,
+    ;
+
+ReportBreakdown
+    BreakdownBy = VolumeGroup,
+    ChartType = Default,
+    ;
+
+****************************************************************************
+** 14. SET SCOPE For Subsequent Reporting (Yearly)
+
+ReportRange
+    Scope = Yearly,
+    ;
+
+****************************************************************************
+** 15. Plot summary reports (Volume Group & Storage Group - perc appears only for Yearly).
+
+ReportSummary
+    StorageGroup = Yes,
+    ;
+
+ReportSummary
+    StorageGroup = Perc,
+    ;
+
+ReportSummary
+    volumeGroup = Yes,
+    ;
+
+ReportSummary
+    volumeGroup = Perc,
+    ;
+
+****************************************************************************
+** 16. Plot Volume Group Breakdown reports.
+
+ReportBreakdown
+    BreakdownBy = VolumeGroup,
+    ChartType = Default,
+    ;
+
+****************************************************************************
+** 17. Generate the HTML pages.
+PublishHtml 
+    Folder = '%testprojectfolder%\HTML';
+
+****************************************************************************
+** 18. Generate PowerPoint slides.
+PowerPoint;
+
+****************************************************************************
+** 20. Close the Project.
+CloseProject;
+
+****************************************************************************
+** 21. Exit the Project.
+Exit;
+
+****************************************************************************

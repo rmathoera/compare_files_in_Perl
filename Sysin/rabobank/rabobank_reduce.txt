@@ -1,0 +1,118 @@
+**-------------------------------------------------------------------
+** RMF Magic - REDUCE step command file template 
+** (C) IntelliMagic 2004-2007 
+**-------------------------------------------------------------------
+** Use the Reduce command file to:
+** 1. Define Report formatting options
+** 2. Request intervals to be synchronized at a full hour boundary 
+** 3. Request short intervals to be aggregated to a longer interval.
+** 4. Optionally request data set processing (SMF 42)
+** 5. Optionally set compression mode and speed for RMZ
+** 6. Define HOLIDAYs and SHIFTs for trending data base
+** 7. Optionally select records based on SYSTEM, SYSPLEX or TIME
+** 8. Optionally create Disk Magic Command (DMC) files
+**
+** This sample input member is formatted as follows:
+** - lines starting with 2 asterisks are true comment lines and 
+**   should not be changed. 
+** - lines starting with a single asterisk contain a command that
+**   you may activate by removing the asterisk.
+** - lines that do not start with an asterisk contain a command that
+**   you probably need for your (initial) run. You may need to
+**   modify the parameter selection and/or settings.**
+**
+** You may use multiple COLLECT, HOLIDAY and SHIFT commands, but
+** each one must be closed by a ';' (semicolon).
+**
+**-------------------------------------------------------------------
+** 1. Define report header and page length
+**    (Define long page to avoid intermediate page headers)
+**-------------------------------------------------------------------
+**
+PRINT TITLE='RMF Magic Reduce', pagelen=999;
+**
+**-------------------------------------------------------------------
+** 2. Synchronize reporting at whole hours (default off)
+**-------------------------------------------------------------------
+**
+* COLLECT sync=0;
+**
+**-------------------------------------------------------------------
+** 3. Aggregate short intervals to longer intervals
+**-------------------------------------------------------------------
+**
+* COLLECT interval=30;
+**
+**-------------------------------------------------------------------
+** For the following commands, please refer to the Reference Guide
+**-------------------------------------------------------------------
+**
+** COLLECT GMT | TIMEZONE=[-]GMThours[:minutes];
+** COLLECT NOFCD;
+** COLLECT ONLY741DEVICES;
+** COLLECT NOSERIALNUMBERCHECK;
+**
+**-------------------------------------------------------------------
+** 4. Optional data set statistics based on SMF 42 (default by hour)
+**    Activate this command only when processing type 42 records.
+**    If you want data set reporting AND trending then you must
+**    use the HOLIDAY and SHIFT definitions also.
+**-------------------------------------------------------------------
+**
+* COLLECT dataset=(interestgroup="IGT", miniorate=0, minintensity=50,
+*                  intval=60, sync=0);
+**
+**-------------------------------------------------------------------
+** 5. Compression level of RMZ file (NONE, FAST, DEFAULT)
+**    Higher levels of compression take more (much) processor time
+**-------------------------------------------------------------------
+**
+* COLLECT compress=FAST;
+**
+**-------------------------------------------------------------------
+** 6. Define holidays and shifts 
+**-------------------------------------------------------------------
+**
+* HOLIDAY 2007/12/25;
+* HOLIDAY 2008/01/01;
+**
+* SHIFT weekend, include=((SATURDAY), (7:00, 24:00));
+* SHIFT weekend, include=((SUNDAY), (00:00, 19:00));
+* SHIFT weekend, include=(HOLIDAY);
+**
+**Other weekend hours are part of batch window as assigned below.
+* SHIFT batch, include=(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, 
+*                        (19:00, 7:00));
+* SHIFT batch, include=(SATURDAY, (0:00, 07:00));
+* SHIFT batch, include=(SUNDAY, (19:00, 24:00));
+**
+**all weekend hours already assigned, so remaining will be weekdays
+* SHIFT peak, include = ((9:00, 10:30), (12:00,14:00));
+**
+**shift 'online' covers weekdays, 7am to 7pm, minus shift 'peak'
+* SHIFT online, include = (7:00, 19:00);
+**
+**-------------------------------------------------------------------
+** 7. Selection by sysplex, system or time
+**    Note: selection by Sysplex is not possible when processing 
+**          type 42 records.
+**-------------------------------------------------------------------
+**
+** Use following for sysplex selection (only one can be specified)
+** (Use system instead of sysplex selection with SMF 42 records)
+COLLECT select sysplex=KRS;
+**
+** Use following for System selection (multiple systems can be specified)
+* COLLECT select system=(STS1, AVC2);
+**
+** Use following for Interval selection 
+** (multiple intervals can be specified)
+* COLLECT select interval=(start=(date='2003/12/28', time='00:01'), 
+*      end=(date='2003/12/28', time='01:00'));
+**
+**-------------------------------------------------------------------
+** 8. Optional Disk Magic command file output for each interval
+**-------------------------------------------------------------------
+* DMC collect;
+**
+

@@ -1,0 +1,11 @@
+literal user imusgu1
+literal pass tmlk910
+cd ..
+ascii
+cd RMFMAGIC.TSUITE.BDIENST.JCL
+put reduce.txt reduce
+put analyze.txt analyze
+put $2reduce.jcl $2reduce
+put $3analze.jcl $3analze
+put $4dbload.jcl $4dbload
+quit

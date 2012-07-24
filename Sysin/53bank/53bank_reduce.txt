@@ -1,0 +1,185 @@
+**-------------------------------------------------------------------
+** IntelliMagic Vision - REDUCE step command file template 
+** (C) IntelliMagic 2003-2010
+**-------------------------------------------------------------------
+** Use the Reduce command file to:
+** 1. Define Report formatting options
+** 2. Request intervals to be synchronized at a full hour boundary 
+** 3. Request short intervals to be aggregated to a longer interval.
+** 4. Optionally request data set processing (SMF 42)
+** 5. Optionally request SRDF/A SMF record processing (SMF 206/user)
+** 6. Optionally set compression mode and speed for RMZ
+** 7. Define HOLIDAYs and SHIFTs for trending data base
+** 8. Optionally select records based on SYSTEM, SYSPLEX or TIME
+** 9. Optionally select DCOLLECT volume and data set records
+** 10. Optionally processing of workload and service class information
+**
+** This sample input member is formatted as follows:
+** - lines starting with 2 asterisks are true comment lines and 
+**   should not be changed. 
+** - lines starting with a single asterisk contain a command that
+**   you may activate by removing the asterisk.
+** - lines that do not start with an asterisk contain a command that
+**   you probably need for your (initial) run. You may need to
+**   modify the parameter selection and/or settings.**
+**
+** You may use multiple COLLECT, HOLIDAY and SHIFT commands, but
+** each one must be closed by a ';' (semicolon).
+**
+**-------------------------------------------------------------------
+** 1. Define report header and page length
+**    (Define long page to avoid intermediate page headers)
+**    Override message severity (return codes) as needed
+**-------------------------------------------------------------------
+**
+PRINT TITLE='IntelliMagic Vision Reduce', pagelen=999;
+**
+*	MESSAGE 156, SEVERITY=4;
+**
+**-------------------------------------------------------------------
+** 2. Synchronize reporting at whole hours (default off)
+**-------------------------------------------------------------------
+**
+ COLLECT sync=0;
+**
+**-------------------------------------------------------------------
+** 3. Aggregate short intervals to longer intervals
+**-------------------------------------------------------------------
+**
+* COLLECT interval=30;
+**
+**-------------------------------------------------------------------
+** For the following commands, please refer to the Reference Guide
+**-------------------------------------------------------------------
+**
+** COLLECT GMT | TIMEZONE=[-]GMThours[:minutes];
+** COLLECT NOFCD;
+** COLLECT ONLY741DEVICES;
+** COLLECT NOSERIALNUMBERCHECK;
+**
+**-------------------------------------------------------------------
+** 4. Optional data set statistics based on SMF 42 (default by hour)
+**    Activate this command only when processing type 42 records.
+**    If you want data set reporting AND trending then you must
+**    use the HOLIDAY and SHIFT definitions also.
+**-------------------------------------------------------------------
+**
+ COLLECT dataset=(interestgroup="IGT", miniorate=0, minintensity=10,
+                  jobdetail, intval=15, sync=0);
+**
+**-------------------------------------------------------------------
+** 5. Optional SMF SRDF/A record processing.  
+**    The SRDF/A SMF record is a user record, you need to verify
+**    which record number is used in your installation, and set it 
+**    with COLLECT SMFRECSRDFA=206;  If not set, 206 is the default.
+**    Also be sure to include them in the IFASMFDP and SORT jobs.
+**-------------------------------------------------------------------
+**
+ COLLECT SRDFA;
+ COLLECT SMFRECSRDFA=206;
+**
+**-------------------------------------------------------------------
+** 6. Compression level of RMZ file (NONE, FAST, DEFAULT)
+**    Higher levels of compression take more (much) processor time
+**-------------------------------------------------------------------
+**
+* COLLECT compress=FAST;
+**
+**-------------------------------------------------------------------
+** 7. Define holidays and shifts 
+**-------------------------------------------------------------------
+**
+* HOLIDAY 2008/12/25;
+* HOLIDAY 2008/01/01;
+**
+* SHIFT weekend, include=((SATURDAY), (7:00, 24:00));
+* SHIFT weekend, include=((SUNDAY), (00:00, 19:00));
+* SHIFT weekend, include=(HOLIDAY);
+**
+**Other weekend hours are part of batch window as assigned below.
+* SHIFT batch, include=(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, 
+*                        (19:00, 7:00));
+* SHIFT batch, include=(SATURDAY, (0:00, 07:00));
+* SHIFT batch, include=(SUNDAY, (19:00, 24:00));
+**
+**all weekend hours already assigned, so remaining will be weekdays
+* SHIFT peak, include = ((9:00, 10:30), (12:00,14:00));
+**
+**shift 'online' covers weekdays, 7am to 7pm, minus shift 'peak'
+* SHIFT online, include = (7:00, 19:00);
+**
+**-------------------------------------------------------------------
+** 8. Selection by sysplex, system or time
+**    Note: selection by Sysplex is not possible when processing 
+**          type 42 or SRDF/A records.
+**-------------------------------------------------------------------
+**-------------------------------------------------------------------
+** 8a. Sysplex selection: only one can be specified.
+**     Use system instead of sysplex selection with SMF 42 or 
+**     SRDFA SMF records
+**-------------------------------------------------------------------
+* COLLECT select sysplex=SYSPLXID;
+**
+**-------------------------------------------------------------------
+** 8b. Use following for System selection or exclusion, 
+**     multiple systems can be specified in each case.
+**-------------------------------------------------------------------
+* COLLECT select system=(STS1, AVC2);
+* COLLECT exclude system=(STS1, AVC2);
+**
+**-------------------------------------------------------------------
+** 8c. Use following for Interval selection. 
+**     Multiple intervals can be specified.
+**-------------------------------------------------------------------
+* COLLECT select interval=(start=(date='2003/12/28', time='00:01'), 
+*      end=(date='2003/12/28', time='01:00'));
+**
+**-------------------------------------------------------------------
+** 9.  Use following for processing DCOLLECT volume and data set
+**     information.
+**     Note : you must specify either interestgroupname or
+**            NODSNTABNLE|NODATASETABLE
+**-------------------------------------------------------------------
+* COLLECT DCOLLECT=(interestgroupname=IGT,
+**                        SETSYSPLEX associates data with a specific
+**                        sysplex ID
+* SETSYSPLEX=<sysplex>,
+**                        Break Point Value overrides DFSMS value
+* BPV=<cyls>,
+**                        Use this BPV if one is not available in
+**                        DFSMS (e.g. using older z/OS release data)
+* DEFAULTBPV=<cyls>,
+**                        Specify DFSMS Storage Group that contains
+**                        BPV to be used
+* BPVGROUP=<sggroup>,
+**                        Do not create <IG>$CDSN file
+**                        Note : Do not specify InterestgroupName
+**                               on Collect statement if this option
+**                               is specified
+* NODSNTABLE|NODATASETABLE,
+* ;
+**
+**-------------------------------------------------------------------
+** 10. Use following to request processing of workload and service
+**     class information
+**-------------------------------------------------------------------
+ COLLECT SERVICECLASS;
+**-------------------------------------------------------------------
+** 11. Defining EMC V-MAX Serial number Aliass’
+**     Depending on the whether the V-MAX is ‘virtualized’ or not and 
+**     depending on the level of microcode, it may be necessary to 
+**     define one or more ‘alias’ serial numbers for the DSS. This 
+**     would be necessary if the standard RMF Post Processor shows 
+**     multiple serial numbers or if the serial numbers in the 
+**     SRDF/A record do not match the serial numbers in the RMF records.
+**
+**     Note that the full 9 character serial number is required.
+**-------------------------------------------------------------------
+*DSS EMC-01234, ALIAS=(EMC-AZYXW,EMC-BZYXW);
+ DSS EMC-02009, ALIAS=(EMC-AAGNV,EMC-BAGNV,EMC-CAGNV);
+ DSS EMC-01993, ALIAS=(EMC-AAGMY,EMC-BAGMY,EMC-CAGMY);
+
+**
+**-------------------------------------------------------------------
+** End of sample REDUCE input commands.
+**-------------------------------

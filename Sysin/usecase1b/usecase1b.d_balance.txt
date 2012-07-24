@@ -1,0 +1,25 @@
+** Use case 1b.d: Migration plan for merging multiple small storage groups into one larger group;
+** and define multiple PSUEDO groups based on a set of Storage Groups  
+
+control   recommendation=logical, 
+          runid=1BVD, 
+          grouptolerance=100; 
+
+* “MOD3”  =  3 * 1113 =  3339 cylinders 
+* “MOD9”  =  9 * 1113 = 10017 cylinders 
+* “MOD54” = 54 * 1113 = 60102 cylinders 
+
+target    UC1BVD, 
+          number=250, 
+          size=(cylinders=60102), 
+          type=(raid=raid5, technology=FC15K, HDDCAPACITY=146GB ); 
+
+** create one pseudo storage group. 
+* Using 3 SG from Wells... 5,990,166 cylinders
+Group     UC1BvD1, group=(AKVPOL, ACEOVR, AKMPOL); 
+group     UC1BvD2, group=(BR0PL1, BR0POL, BR5POL, BCPPOL); 
+group     UC1BvD3, group=(D3LPOL, D4CPOL, D4LPOL, D4WPOL); 
+group     UC1BvD4, group=(IDAPOL, IWDPOL, PXSPOL); 
+group     UC1BvD5, group=(YCLPOL, YCSPOL, YLGPOL, YLSPOL, YSMPOL); 
+
+migrate   group=(UC1BvD1,UC1BvD2,UC1BvD3,UC1BvD4,UC1BvD5); 

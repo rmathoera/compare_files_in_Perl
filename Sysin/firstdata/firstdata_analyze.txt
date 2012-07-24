@@ -1,0 +1,222 @@
+**-------------------------------------------------------------------
+** Template ANALYZE step input file
+**-------------------------------------------------------------------
+** Use the analyze commands to:
+** 1. Set a report title
+** 2. Set general analysis options
+** 3. Define level of detail in device reporting
+** 4. Optionally define Volume properties (size, raid type)
+** 5. Optionally define VolumeGroups for reporting
+** 6. Optionally define custom reports (must define a report before
+**    using it in an interest group command)
+** 7. Define the Interest groups (one or more)
+**     Optionally generate Disk Magic Command (DMC) files
+**     Optionally create TopN CSV files
+**
+** RMF Magic (C) 2003-2009 IntelliMagic
+**
+** This sample input member is formatted as follows:
+** - lines starting with 2 asterisks are true comment lines and 
+**   should not be changed. 
+** - lines starting with a single asterisk contain a command that
+**   you may activate by removing the asterisk.
+** - lines that do not start with an asterisk contain a command that
+**   you probably need for your (initial) run. You may need to
+**   modify the parameter selection and/or settings.
+** - Be sure to remove the asterisk for tne end parentheses and 
+**   semicolons.
+**
+**-------------------------------------------------------------------
+** 1. Define report header and page length
+**    (Define long page to avoid intermediate page headers)
+**-------------------------------------------------------------------
+PRINT title='RMF Magic Analyze', pagelen=999;
+**
+**-------------------------------------------------------------------
+** 2. ANALYZE command: override REDUCE RC as needed
+**    Override high return code from REDUCE 
+**    (be sure to understand reason for high return code first!)
+**-------------------------------------------------------------------
+ANALYZE
+  reducerc=8; 
+** 
+**-------------------------------------------------------------------
+** 3. ANALYZE command: Set level of detail for device data
+**    activedevicemax: Limit number of devices per interval 
+**         for Dashboard detail viewer reporting.
+**    activedeviceintensity: set activity limit, show only devices 
+**         with at least 50 ms busy time per second
+**        (1 I/O of 50 ms, or 25 of 2 ms each).
+**-------------------------------------------------------------------
+* ANALYZE
+*   activedevicemax=1024;
+ANALYZE
+  activedeviceintensity=50;
+**
+**-------------------------------------------------------------------
+** 4. Optionally define Volume properties (recommended)
+**    You can set devtype (3390-n), hddcapacity in Gbyte, 
+**        hddrpm and raidtype.
+**    Specify INCLUDE or EXCLUDE list with patterns based on
+**           dss serial, device number range, volser or storagegroup.
+** 	At least one INCLUDE command is required.
+**
+**    EXAMPLE:
+**    The following example changes the device types to 3390-27, for
+**    all devices on EMC-12123, except for devices D73A and D73B.
+** 
+**         volume devtype=3390-54, 
+**                include=(dss=EMC-12123),
+**                exclude=(devnum=((D73A),(D73B)))
+**                ;
+**
+**    NOTES:
+**    - The commands for logical volume sizes (devtype) are 
+**      automatically generated with the DCOLLECT support. If this
+**      support is used, you do not need to specify them here.
+**    - For z/OS 1.10 the devtype commands are not needed.
+**    - For use with Disk Magic it is important to properly
+**      set hddcapacity, hddrpm and raidtype for the DMC files. 
+**-------------------------------------------------------------------
+**
+** 	NOTE: Please copy the command below for each combination 
+**          of properties that you need to set!
+** 
+* volume 
+*    cylinders=3339,
+*    devtype=3390-3|3390-9|3390-27|3390-54,
+*    hddcapacity=146,
+*    hddrpm=7200|10000|15000,
+*    ssd=0|1,
+*    raidtype=raid1|raid5|raid6|raid10|raidS,
+*    include=(
+*       all,
+*       dss=(IBM-12345,EMC-12345,HTC-12345),
+*       devnum=((1000, 10BF),(1100,11BF),(1200,12BF), (1303), (1607)),
+*       volser=(DB2*, CICS%1, TS*, IPLVOL),
+*       group=(DB2DATA, SRT*),
+*           ),
+*    exclude=(
+*       dss=(IBM-12345,EMC-12345,HTC-12345),
+*       devnum=((1000, 10BF),(1100,11BF),(1200,12BF), (1303), (1607)),
+*       volser=(DB2*, CICS%1, TS*, IPLVOL),
+*       group=(DB2DATA, SRT*),
+*           ),
+*    ;
+**
+**-------------------------------------------------------------------
+** 5. Optionally define VolumeGroups for reporting (recommended)
+**    Use VolumeGroups to monitor performance per application group.
+**    VolumeGroups are much more efficient (less time and space) than
+**    interestgroups for reporting.
+**    You can specify partially overlapping groups; once a volume 
+**    matches a pattern it will not be considered for subsequent 
+**    groups.
+**
+**    EXAMPLE:
+**    Report on DB2, TSO and all other volumes.
+**    volgroup DB2VOLS, select=(group=('DB2*'));
+**    volgroup TSOVOLS, select=(group=('TSO*'));
+**    volgroup OTHER,   select=all;
+**
+**-------------------------------------------------------------------
+**
+** 	NOTE: Please repeat the command below for each volume group.
+** 
+* volgroup NAME,
+*    select=(
+*       all,
+*       dss=(IBM-12345,EMC-12345,HTC-12345),
+*       devnum=((1000, 10BF),(1100,11BF),(1200,12BF), (1303), (1607)),
+*       volser=(DB2*, CICS%1, TS*, IPLVOL),
+*       group=(DB2DATA, SRT*),
+*           ),
+*    exclude=(
+*       dss=(IBM-12345,EMC-12345,HTC-12345),
+*       devnum=((1000, 10BF),(1100,11BF),(1200,12BF), (1303), (1607)),
+*       volser=(DB2*, CICS%1, TS*, IPLVOL),
+*       group=(DB2DATA, SRT*),
+*           ),
+*    ;
+**
+**-------------------------------------------------------------------
+** 6. Optionally define custom reports (advanced users)
+**    You must define a report before using it in an interest group 
+**    command.
+**    Custom reports are not shown in the GUI, but written to the 
+**    REPORTS directory / ddname.
+**    Please refer to the documentation for supported report 
+**    types and fields.
+**-------------------------------------------------------------------
+* DEFINE REPORT dsie, 
+*   type=dss, 
+*   row, title='Use fields that GUI does not have',
+*   col=(date, time, iorate, popservice, pending, poppending,
+*   iosq, popiosq, connect, popconnect, disconnect, popdisconnect);
+**
+**-------------------------------------------------------------------
+** 7. Define the Interest groups (at least one required)
+**    Interest groups are groups of volumes as specified with 
+**    select and exclude clauses.
+**    For each interestgroup you can 
+**    top10:  Create top-n reports based on MB /sec.
+**    dmc:    Generate Disk Magic Control (DMC) files based 
+**            on top-n reports. 
+**    busydevice: request volume exception lists.
+**
+**    EXAMPLE:
+**    include all device from IBM-12345 and storage group DB2,
+**    create DMC files per LCU to top-10 by I/O rate.
+**    interestgroup IGT, 
+**        select=(dss=IBM-12345), select=(group=DB2)),
+**        top10=(criterion=iorate), dmc=(topn, lcu);
+**-------------------------------------------------------------------
+**
+**    NOTE: repeat interestgroup commands to use more than one.
+**    NOTE: repeat the SELECT clause to include more volumes.
+**    NOTE: repeat the EXCLUDE clause to exclude more volumes.
+**
+INTERESTGROUP FDA,
+    busydevice=(criterion=IORATE, threshold=300),
+**      other variables that can be used instead of IORATE
+**          IORATE, RESPONSE, CONNECT, CHANNELBUSY,
+**          DISCONNECT, PENDING, IOSQ, READHIT, WRITEHIT, RWRATIO, 
+**          WRITERATE, WRITEMBS, POPRESPONSE, POPSERVICE,
+**          POPIOSQ, POPENDING, POPCONNECT, POPDISCONNECT
+top10=(criterion=MBS),
+**      other variables that can be used instead of MBS
+**       IORATE, CONNECT, DISCONNECT, PENDING, IOSQ, 
+**       READHIT, WRITEHIT, RWRATIO, WRITERATE, WRITEMBS,
+**       READMBS, MBS, SEQ, SEQSTAG,DESTAGE, POPRESPONSE, POPSERVICE,
+**       POPIOSQ, POPPENDING, POPCONNECT,  POPDISCONNECT
+dmc=(
+     TOPN,
+     DSS,
+*        PPRC | SRDF,
+*        XRC | GEOXPARM,
+     ),
+    select=(
+        all,
+*       dss=(IBM-12345,EMC-12345,HTC-12345),
+*       devnum=((1000, 10BF),(1100,11BF),(1200,12BF), (1303), (1607)),
+*       volser=(DB2*, CICS%1, TS*, IPLVOL),
+*       group=(DB2DATA, SRT*),
+*       ssid=(2000, 2100, 2200),
+*       pprc,
+*       srdf,
+           ),
+*    limitto=(dss=(IBM-12345,EMC-12345,HTC-12345)),
+*    exclude=(
+*       dss=(IBM-12345,EMC-12345,HTC-12345),
+*       devnum=((1000, 10BF),(1100,11BF),(1200,12BF), (1303), (1607)),
+*       volser=(DB2*, CICS%1, TS*, IPLVOL),
+*       ssid=(2000, 2100, 2200),
+*       group=(DB2DATA, SRT*),
+*           ),
+*   interval=(start=(time='12:00:00'), end=(time='15:45:02')),
+*   interval=(start=(date='2003/07/05',time='12:00:00'),
+*             end=(date='2003/07/05',time='15:45:02')),
+*   report=(dsie),
+    ;
+**
+**-------------------------------------------------------------------

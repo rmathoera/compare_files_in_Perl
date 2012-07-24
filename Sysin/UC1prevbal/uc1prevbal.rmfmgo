@@ -1,0 +1,150 @@
+****************************************************************************
+**  IntelliMagic script for automated Balance runs.                       **
+**  (C) IntelliMagic 2003-2010                                            **
+**                                                                        **
+**  Run from menu File -> Run Script...                                   **
+**  or Run from command line as RMFM4W.EXE /s <script file>               **
+**                                                                        **
+**  Commands from this script can be combined with commands from          **
+**  other script templates.                                               **
+**                                                                        **
+**  This sample IntelliMagic Vision script is formatted as follows:       **
+**  - lines starting with 2 asterisks are true comment lines              **
+**  - lines starting with a single asterisk contain a command that        **
+**    you may activate by removing the asterisk.                          **
+**  - lines that do not start with an asterisk contain a command that     **
+**    most people will need for initial runs.                             ** 
+**                                                                        **
+****************************************************************************
+
+** 1. Specify the project for the script.
+* Open/create the project.
+
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF,
+    Trending = yes,
+    ;
+
+****************************************************************************
+** 2. Run reduce.
+Reduce
+    SmfFile = '%datafolder%\Wells_r7x.zrf',
+    CommandFile = '%testprojectfolder%\uc1a_logical_migration_reduce.txt'
+    ;
+
+****************************************************************************
+** 3. Run analyze.
+Analyze
+    CommandFile = '%testprojectfolder%\uc1a_logical_migration_analyze.txt'
+    ;
+
+****************************************************************************
+** 4. Add analyzed data to database.
+DatabaseAdd
+    ;
+
+****************************************************************************
+** 5. Run Balance.
+**    Specify the workload files for the Balance run, using the InputFile
+**    parameter.
+**    You may specify up to 7 workload files. Valid workload files are
+**    files that the Analyze process placed in the subdirectory "Balance" of
+**    the project, when Analyze was run with the command "analyze=balance".
+**    Instead of a number of "InputFile" commands you can specify a single
+**    command "InputFolder". If "InputFolder" is used, all files in the
+**    the specified folder will be taken as input.
+**
+**    Specify the file containing the balance input commands using the 
+**    CommandFile parameter.
+**    If a parameter is omitted the current value shown for that parameter 
+**    on the Run Control Center will be used.
+**
+BalanceRun
+     InputFile = '%datafolder%\TUE@DMIG.csv',
+**InputFile = '\\imserver5\testdata\rmfdata\2008\customers\wells fargo\b-000914\TUE@DMIG.csv',
+
+     CommandFile = '%datafolder%\uc1a_logical_migration.tc-000415_balance.txt', 
+**CommandFile = '\\imserver5\testdata\rmfdata\2008\customers\wells fargo\b-000914\uc1a_logical_migration.tc-000415_balance.txt',
+
+     VolumeInfo = '%datafolder%\SELDEV.csv',
+**VolumeInfo = '\\imserver5\testdata\rmfdata\2008\customers\wells fargo\b-000914\SELDEV.csv',
+
+*OutputFolder = '%testprojectfolder%\balance', 
+* No need to designate
+
+     ;
+
+**   ... Up to 7 SmfFile parameters
+**   Or use:
+*    InputFolder = <string>,
+*    CommandFile = <string>,
+*    VolumeInfo = <string>,
+*    OutputFolder = <string>,
+*    ;
+****************************************************************************
+** 3. Add BalanceRun result to database.
+**    Optionally specify a list of Run ID's to add to the database.
+**    By default all Run ID's are added.
+
+BalanceDatabaseAdd
+*    ReportFolder = '%testprojectfolder%\balance',
+* No need to designate
+
+     RunID = (1AVA),
+*    RunID = (1AVA, 1AVB, 1AVC),
+    ;
+****************************************************************************
+** 4. Set options for subsequent Balance reporting.
+**    The default RunID to report on is the first RunID in alphabetical
+**    order.
+**    For the other options the default is the current value in the project
+**    settings.
+
+BalanceReport
+     RunID = '1AVA',
+*     TieringAdvice = Yes,
+*     TieringDensity = Yes,
+     DeviceMapping = Yes,
+*     HeatMap = Yes,
+*     BestMoves = Yes,
+     Activity = Yes,
+     Comparison = Yes,
+     MostActive = Yes,
+     ActivityCriterion = All,
+     ;
+
+**BalanceReport
+*    RunID = <string>,
+*    TieringAdvice = Yes | No,
+*    TieringDensity = Yes | No,
+*    DeviceMapping = Yes | No,
+*    HeatMap = Yes | No,
+*    BestMoves = Yes | No,
+*    Activity = Yes | No,
+*    Comparison = Yes | No,
+*    MostActive = Yes | No,
+*    ActivityCriterion = All | IOrate | WriteMBs | TotalMBs | BackendRate,
+*    ;
+****************************************************************************
+**  5.a. Export Balance sheets to Powerpoint.
+**     Export all charts previously created to Powerpoint.
+**     Optionally specify a template to use for the Powerpoint presentation.
+
+**BalancePowerPoint;
+
+*    RunID = <string>,
+*    Template = <string>;
+
+** 5.b. Export Excel and HTML Publish of Balance Reports
+
+BalanceExport;
+****************************************************************************
+** 6. Close the project.
+**     Optionally close the project after running the script.
+
+CloseProject;
+****************************************************************************
+** 7. Exit the project.
+
+Exit;
+****************************************************************************

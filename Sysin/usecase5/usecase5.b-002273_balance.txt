@@ -1,0 +1,10 @@
+* Use case 5b-002273 - volsers declared empty, zr* & za*, target volsers for best move = ida* -  no. moves = 180. 
+
+control       recommendation=bestmoves,
+	      number=100,
+	      runid=2273;
+
+category empty, volser=zr*; 
+category empty, volser=za*;
+
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891);      

@@ -1,0 +1,74 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+
+* Open/create the project.
+* JMK2009JUL06. Open of (existing) DB2 project not supported until
+*               5.1.0b16
+Project Name = '%testprojectfolder%', 
+        mode=StartWithCSV, Trending=yes;
+
+* JMK2009JUL06. DatabaseEmpty not supported on DB2 project until 5.1.0b16
+DatabaseEmpty;
+
+* Run add data to database for each sysplex and each day
+DatabaseAdd Imgzip=(%datafolder%\20080716\adc.g0.imgzip,
+*                   %datafolder%\20080716\pdev.g0.imgzip,
+*                   %datafolder%\20080716\edev.g0.imgzip,
+*                   %datafolder%\20080716\nhphx.g0.imgzip,
+*                   %datafolder%\20080716\nhdev.g0.imgzip,
+*                   %datafolder%\20080716\mktg.g0.imgzip,
+                    %datafolder%\20080716\eprd.g0.imgzip,
+                    %datafolder%\20080716\east.g0.imgzip,
+                    %datafolder%\20080716\west.g0.imgzip,
+*                   %datafolder%\20080716\pprd.g0.imgzip,
+                    %datafolder%\20080716\lprd.g0.imgzip), 
+	Channels = Yes;
+
+DatabaseAdd Imgzip=(%datafolder%\20080717\adc.g0.imgzip,
+*                   %datafolder%\20080717\pdev.g0.imgzip,
+*                   %datafolder%\20080717\edev.g0.imgzip,
+*                   %datafolder%\20080717\nhphx.g0.imgzip,
+*                   %datafolder%\20080717\nhdev.g0.imgzip,
+*                   %datafolder%\20080717\mktg.g0.imgzip,
+                    %datafolder%\20080717\eprd.g0.imgzip,
+                    %datafolder%\20080717\east.g0.imgzip,
+                    %datafolder%\20080717\west.g0.imgzip,
+*                   %datafolder%\20080717\pprd.g0.imgzip,
+                    %datafolder%\20080717\lprd.g0.imgzip), 
+	Channels = Yes;
+
+DatabaseAdd Imgzip=(%datafolder%\20080718\adc.g0.imgzip,
+*                   %datafolder%\20080718\pdev.g0.imgzip,
+*                   %datafolder%\20080718\edev.g0.imgzip,
+*                   %datafolder%\20080718\nhphx.g0.imgzip,
+*                   %datafolder%\20080718\nhdev.g0.imgzip,
+*                   %datafolder%\20080718\mktg.g0.imgzip,
+                    %datafolder%\20080718\eprd.g0.imgzip,
+                    %datafolder%\20080718\east.g0.imgzip,
+                    %datafolder%\20080718\west.g0.imgzip,
+*                   %datafolder%\20080718\pprd.g0.imgzip,
+                    %datafolder%\20080718\lprd.g0.imgzip), 
+	Channels = Yes;
+
+
+* Set Excel to autosave, and also to create a separate workbook for each chart sheet
+Excel AutoSave = Yes, SeparateWorkbooks = Yes;
+
+* Plot the dashboard
+Dashboard;
+
+* Plot the Workload Summary for all volumes
+ReportSummary 
+        WorkloadSummary=Yes, 
+        PerformanceSummary=Yes,
+        ShowDataFromVolumes=All;
+
+* Generate the HTML pages
+PublishHTML
+        Folder = '%testprojectfolder%\HTML';
+
+* Generate PowerPoint slides
+PowerPoint;

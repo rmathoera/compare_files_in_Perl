@@ -1,0 +1,32 @@
+** Use case 4B - Find SSD candidate volumes, 
+** with specific grouping targets. 
+**
+** FC300:   20 array groups, 2M cylinders, raid5, FC15K, 8 disks/rank
+** SSD146:  16 array groups, 1M cylinders, raid5, FC15K, 8 disks/rank
+
+control   recommendation=group, 
+          runid=UC4B, 
+          grouptolerance=5; 
+
+target    FC300, 
+          number=20, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    SSD146, 
+          number=16, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=SSD, groupsize=8); 
+
+* make sure non-SMS managed devices are spread over arrays groups 
+Group     opensys, group=%unk*; 
+Group     pdasys, volser=pda*, target=FC300; 
+Group     pdasys, volser=pd4*, target=FC300;
+Group     public, volser=pwk*;
+Group     akpol, volser=akv*, target=FC300;
+Group     akpol, volser=akm*;
+Group     ttemp, volser=ptmp*;
+ 
+
+* selected storage systems to merge 
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891); 

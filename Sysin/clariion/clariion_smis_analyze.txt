@@ -1,0 +1,131 @@
+**-------------------------------------------------------------------
+** IntelliMagic Vision - sample command file
+** (C) IntelliMagic 2010
+**-------------------------------------------------------------------
+**
+** Use the command file to
+** 1. Define Report formatting options
+** 2. Specify location name (sysplex) and interestgroup 
+** 3. Specify interval length (aggregation) and synchronization
+** 4. Specify activity thresholds for volume level performance data
+** 5. Specify parameter for IntelliMagic Direction analysis
+** 6. Define HOLIDAYS and SHIFS for the trending database
+** 7. Filter time period and/or Disk Storage Systems
+** 8. Specify hardware properties as needed for Array, Link and Volume
+**
+** This sample input member is formatted as follows:
+** - lines starting with 2 asterisks are true comment lines and 
+**   should not be changed. 
+** - lines starting with a single asterisk contain a command that
+**   you may activate by removing the asterisk.
+** - lines that do not start with an asterisk contain a command that
+**   you probably need for your (initial) run. You may need to
+**   modify the parameter selection and/or settings.**
+**
+**
+**  You may use commands multiple times, but each command must be 
+**  closed by a ';' (semicolon)
+**
+**-------------------------------------------------------------------
+** 1. Define report header and page length
+**    (Define long page to avoid intermediate page headers)
+**-------------------------------------------------------------------
+*
+* PRINT TITLE = "Report Title", PAGELEN = 999;
+*
+**-------------------------------------------------------------------
+** 2. Specify location name (sysplex) and interestgroup 
+**-------------------------------------------------------------------
+*
+ ANALYZE
+     INTERESTGROUP = "IGT",
+     SETLOCATION = "Location";
+*
+**-------------------------------------------------------------------
+** 3. Specify interval length (aggregation) and synchronization 
+**-------------------------------------------------------------------
+*
+* ANALYZE
+*     INTERVAL = 15,
+*     SYNC = 00;
+*
+**-------------------------------------------------------------------
+** 4. Specify activity thresholds for volume level performance data 
+**-------------------------------------------------------------------
+*
+* ANALYZE ACTIVEDEVICEINTENSITY = 50 | NOACTIVEDEVICES;
+* ANALYZE ACTIVEDEVICEMAX = 200;
+*
+**-------------------------------------------------------------------
+** 5. Specify parameters for IntelliMagic Direction analysis
+**    "EASYTIER" to request parameter collection for Easytier model.
+**-------------------------------------------------------------------
+*
+* ANALYZE EASYTIER;
+*
+**-------------------------------------------------------------------
+** 6. Define HOLIDAYS and SHIFS for the trending data base
+**-------------------------------------------------------------------
+**
+* HOLIDAY 2010/12/25;
+* HOLIDAY 2011/01/01;
+**
+* SHIFT weekend, include=((SATURDAY), (7:00, 24:00));
+* SHIFT weekend, include=((SUNDAY), (00:00, 19:00));
+* SHIFT weekend, include=(HOLIDAY);
+**
+**Other weekend hours are part of batch window as assigned below.
+* SHIFT batch, include=(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, 
+*                        (19:00, 7:00));
+* SHIFT batch, include=(SATURDAY, (0:00, 07:00));
+* SHIFT batch, include=(SUNDAY, (19:00, 24:00));
+**
+**all weekend hours already assigned, so remaining will be weekdays
+* SHIFT peak, include = ((9:00, 10:30), (12:00,14:00));
+**
+**shift 'online' covers weekdays, 7am to 7pm, minus shift 'peak'
+* SHIFT online, include = (7:00, 19:00);
+*
+**-------------------------------------------------------------------
+** 7. Filter time period and/or Disk Storage Systems
+**    Note: This is only supported for TPC data
+**-------------------------------------------------------------------
+*
+* COLLECT
+*   SELECT INTERVAL = 
+*              ( start = ( date='yyyy/mm/dd', time='hh:mm' ),
+*                end = ( date='yyyy/mm/dd', time='hh:mm' ),
+*                weekday = ( mon, tue, wed, thu, fri, sat, sun ) ),
+*   SELECT DSS = (list);
+*
+**-------------------------------------------------------------------
+** 8. Specify hardware properties as needed for Array, Link and Volume
+**-------------------------------------------------------------------
+* DSS id,
+*     NAME = "name",
+*     MODEL = "model",
+*     HDDCAPACITY = Gbyte,
+*     HDDRPM = rpm,
+*     RAIDTYPE = RAID5|RAID6|RAID10;
+*
+* ARRAY
+*     INCLUDE = ( all | dss = (list), array = ( mask, ..., mask ) ),
+*     EXCLUDE = ( dss = (list), array = ( mask, ..., mask ) ),
+*     HDDCOUNT = n,
+*     HDDCAPACITY = Gbyte,
+*     HDDRPM = rpm,
+*     RAIDTYPE = RAID5|RAID6|RAID10;
+ 
+* LINK
+*     INCLUDE = ( all | dss = (list), link = ( mask, ..., mask ) ),
+*     EXCLUDE = ( dss = (list), link = ( mask, ..., mask ) ),
+*     SPEED = Gbs,
+*     TYPE = SCSI|PPRC|ECKD;
+ 
+* VOLUME
+*     INCLUDE = ( all | dss = (list), volume = ( mask, ..., mask ) ),
+*     EXCLUDE = ( dss = (list), volume = ( mask, ..., mask ) ),
+*     HDDCAPACITY = gbyte,
+*     HDDRPM = rpm,
+*     RAIDTYPE = RAID5|RAID6|RAID10;
+*

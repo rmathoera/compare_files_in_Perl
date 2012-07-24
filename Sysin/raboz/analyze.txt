@@ -1,0 +1,135 @@
+**-------------------------------------------------------------------
+** Template ANALYZE step input file
+**-------------------------------------------------------------------
+** Use the analyze commands to:
+** 1. Define the Interest groups
+** 2. Define level of detail in device reporting
+** 3. Set general analysis options
+** 4. Optionally define custom reports (must define a report before
+**    using it in an interest group command)
+** 5. Optionally generate Disk Magic Command (DMC) files
+** 6. Optionally create TopN CSV files
+**
+** RMF Magic (C) 2004-2007 IntelliMagic
+**
+** This sample input member is formatted as follows:
+** - lines starting with 2 asterisks are true comment lines and 
+**   should not be changed. 
+** - lines starting with a single asterisk contain a command that
+**   you may activate by removing the asterisk.
+** - lines that do not start with an asterisk contain a command that
+**   you probably need for your (initial) run. You may need to
+**   modify the parameter selection and/or settings.
+**
+**-------------------------------------------------------------------
+** 1. Define report header and page length
+**    (Define long page to avoid intermediate page headers)
+**-------------------------------------------------------------------
+PRINT title='RMF Magic Analyze', pagelen=999;
+**
+**-------------------------------------------------------------------
+** 2. ANALYZE command
+**-------------------------------------------------------------------
+**    (a) Override high return code from REDUCE 
+**        (be sure to understand reason for high return code first!)
+**
+ANALYZE,
+  reducerc=8; 
+** 
+**
+**    (b) Limit number of devices per interval (for Dashboard) and
+**        set activity limit
+**
+* ANALYZE,
+*   activedevicemax=1024;
+**
+**    (c) Show only devices with at least 50 ms busy time per second
+**        (1 I/O of 50 ms, or 25 of 2 ms each)
+**
+ANALYZE,
+  activedeviceintensity=50;
+**
+**-------------------------------------------------------------------
+** 3. Define an interest group that covers everything.
+**    See below for more detailed examples.
+**-------------------------------------------------------------------
+INTERESTGROUP IGT,
+    select=all,
+    busydevice=(criterion=iorate, threshold=300);
+**
+**-------------------------------------------------------------------
+** 4. Define a custom report.
+**    Define an interest group that uses the custom report.
+**    (DEFINE command must preceed INTERESTGROUP command!)
+**-------------------------------------------------------------------
+* DEFINE REPORT dsie, type=dss, row,
+*   title='Use fields that GUI does not have',
+*   col=(date, time, iorate, popservice, pending, poppending,
+*   iosq, popiosq, connect, popconnect, disconnect, popdisconnect);
+**
+* INTERESTGROUP IGT,
+*   select=all,
+*   busydevice=(criterion=iorate, threshold=300)
+*   report=(dsie);
+**
+**-------------------------------------------------------------------
+** 5. Define an interest group that covers everything.
+**    Create top-n reports based on MB /sec.
+**    Generate Disk Magic Control (DMC) files based on top-n reports. 
+**-------------------------------------------------------------------
+**
+* INTERESTGROUP IGT,
+*   select=all, 
+*   busydevice=(criterion=mbs, threshold=3),
+*   top10=(criterion=mbs),
+*   dmc=(topn, lcu);
+**
+**-------------------------------------------------------------------
+** 6. Define an interest group based on date and time selection.
+**-------------------------------------------------------------------
+**
+* INTERESTGROUP IG6,
+*   select=all,
+*   interval=(start=(date='2003/07/05',time='12:00:00'),
+*             end=(date='2003/07/05',time='15:45:02'));
+**
+**-------------------------------------------------------------------
+** 7. Define an interest group that covers the same time period 
+**    for every day.
+**-------------------------------------------------------------------
+**
+* INTERESTGROUP IG7,
+*   select=all,
+*   interval=(start=(time='12:00:00'), end=(time='15:45:02'));
+**
+**-------------------------------------------------------------------
+** 8. Define an interest group that 
+**    (a) discards all information for disk subsystems other than 
+**        the two specified in LIMITTO.
+**    (b) selects volumes that are in storage groups with names
+**        starting with GRP1 or GRP2.
+**-------------------------------------------------------------------
+* INTERESTGROUP IG8,
+*   limitto=(dss=(IBM-12352,IBM-24567)),
+*   select=(group=(GRP1*, GRP2*));
+**
+**-------------------------------------------------------------------
+** 9. Define an interest group that includes all volumes in any of
+**    the three named storage groups AND any volume with a volser
+**    that matches any of the mask definitions.  
+**-------------------------------------------------------------------
+**
+* INTERESTGROUP IG9,
+* select=(group=(group1, group2)),
+* select=(volser=(vol%%1, vol%%2, DB1*, DB3*, %%DBHJ));
+**
+**-------------------------------------------------------------------
+** 10. Define an interest group that includes those volumes in any
+**     of the three named storage groups that have a volser that
+**     matches any of the mask definitions.
+**-------------------------------------------------------------------
+**
+* INTERESTGROUP IGA,
+* select=(group=(GRP001, GRP002, GRP003),
+*        (volser=(vol%%1, vol%%2, DB1*, DB3*, %%DBHJ)));
+**

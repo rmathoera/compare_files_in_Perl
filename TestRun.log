@@ -1,0 +1,199 @@
+Run testsuite
+
+6.6.0 - 1297
+compare against 6.6.0 - 1282
+expected differences
+- reduce diffs
+- xml changes a lot
+run started on 23-04-2012 11:21 only PC
+run ended on 24-04-2012
+
+many zOS tests not correctly run
+balance testcases not all run must be rerun
+
+
+6.6.0 - 1328
+compare against 6.6.0 - 1297
+expected differences
+- DSS FR-002044
+run started on 24-04-2012 14:55
+run ended on 25-04-2012  12:00
+
+
+
+6.6.0 - 1343
+compare against 6.6.0 - 1328
+test only PC
+expected differences
+
+run started on 26-04-2012 10:30
+run ended on 26-04-2012 17:20
+
+
+6.6.0 - 1343
+compare against 6.6.0 - 1328
+test only PC
+expected differences
+run started on 27-04-2012 11:18 
+run ended on 2012-04-27 18:19
+
+6.6.0 - 1353
+compare against 6.6.0 - 1328
+test zOS only
+run started at 2012-04-29 23:33:56 
+test stopped due no connection to ftp and VMS machine
+
+6.6.0 - 1353
+compare against 6.6.0 - 1328
+test zOS only
+run started at 2012-04-29 23:58
+test stopped due no connection to ftp and VMS machine
+
+6.6.0 - 1353
+compare against 6.6.0 - 1328
+test zOS and balance
+run started at 2012-04-30 00:03
+run ended on 2012-04-30 07:14
+
+
+6.6.0 - 1357
+compare against 6.6.0 - 1328
+test PC and script based tests
+test zOS based tests
+no balance test done
+expected differences
+run started at 2012-05-01 12:16
+run ended on 2012-05-01 21:02
+
+
+6.6.0 - 1361
+compare against 6.6.0 - 1357
+expected differences
+run started at 2012-05-02 10:05
+run ended on 2012-05-02 18:24
+
+
+6.6.0 - 1368
+compare against 6.6.0 - 1361
+expected differences
+-FR-02095: Ticket#16 Send e-mail if script fails
+-XML_6.6.0_April_25
+-FR-02157 Coupling Facility XML for review
+-FR-01820 Dashboard updates
+run started at 2012-05-04 10:38
+run ended on 2012-05-04 18:36
+result differents found
+- FR-020157 OK
+
+
+6.6.0 - 1380
+compare against 6.6.0 - 1368
+expected differences
+-B-004767: open connection to recently created threshold tables in read/write
+-DIOG table should inherit from DDSS
+-More activity thresholds to complement rules
+-B-004739 Fixed rankid label for DDRV table
+-FR-02040 HDD Utilization & FR-02137 FW Bypass as percentage
+-Threshold support for Monthly/Yearly tables
+-More HyperPAV / PAV recommendations in Reporter
+-FR-02180 XML for R783HAIU (Max HyperPAV by LCU)
+-FR-00321 Pacing / Linkerrors dashboard
+-FR-02181 XML changes for replication dashboards
+run started at .................
+run ended on .............
+
+
+6.6.0 - 1405
+compare against 6.6.0 - 1368
+expected differences
+- B-004472 Changed WPSortAndTop inner SortOrderControl's alignment to MiddleLeft
+- B-004768: duplicate joins in SQL_generation with rules
+- B-004769: Code generation issue with lookup for thresholds
+- B-004773 : implement drill-down on label from bubble chart
+- B-004811, eliminate debug messages
+- Custom Report Wizard Fields page: size of Y-axis groups and positioning of add- and remove buttons was not always correct
+- Custom report wizard pages: GUI Layout changes to better comply with UX guidelines
+- custom report wizard WPFields: updateButtons was commented out
+- Fix WPFields: when display size set to 125% not all controls would be shown and the layout scrambled
+- FR-01996: Made background of icon on Send E-mail form Transparent. Resized PictureFormat a bit so that full icon is visible.
+- Further online help improvements
+- Help updates with threshold/classification variables
+- XML: rules channel reporting, computed response rule
+run started at 2012-05-08 17:40
+run ended on 2012-05-09 01:35
+
+
+6.6.0 - 1418
+compare against 6.6.0 - 1405
+expected differences
+- FR-02031: changes after code review ,no activedevicemax set by default
+- B-004768 Added special case for SUM in county / Reverted use of getFromSQL to avoid duplicate joins / (unrelated error) avoid null-reference exception for if query-result is empty
+- B-004774 Safety check to avoid reference lines containing more than one interval
+- B-004791 Code review: unused function / Collect Couplingfacility / CF command
+- B-004748 Update rating mechanism for Performance Index / Cap Performance Index at 5 for all goal types, set proper DB version / Weigh values in reporter, rather than easily skewed max
+- Area charts with threshold rules
+- FR-01803 add workload skew to CDSS database table / Make Vision write skew parameter to CDSS CSV file
+run started at 2012-05-09 10:44
+run ended on 2012-05-09 18:56
+
+6.6.0 - 1429
+compare against 6.6.0 - 1418
+test PC and zOS
+expected differences
+-
+run started at 2012-05-09 22:09:17
+run ended on 2012-05-10 07:09:29
+
+
+6.6.0 - 1437
+compare against 6.6.0 - 1429
+test PC and zOS
+expected differences
+-
+run started at 2012-05-10 09:57
+run ended on 2012-05-10 20:24
+
+6.6.0 - 1442
+compare against 6.6.0 - 1437
+test PC and zOS
+expected differences
+-
+run started at 2012-05-11 11:00
+run ended on 2012-05-11 19:07
+
+
+6.6.0 - 1447
+compare against 6.6.0 - 1442
+test PC and zOS
+expected differences
+-
+run started at 2012-05-13 23:00
+run ended on 2012-05-14 08:37
+
+6.6.0 - 1610
+compare against 6.6.0 - 1584
+test PC
+expected differences
+-
+run started at 2012-05-24  12:18
+run ended on 2012-05-25 10
+
+6.6.0 - 1620
+compare against 6.6.0 - 1610
+test PC
+expected differences
+-
+run started at 2012-05-25  09:57
+run ended on 2012-05-
+
+
+6.6.0 - 1807
+compare against 6.4.3 - 1623
+test PC validation tests.
+expected differences
+-
+run started at 2012-06-14 10:20
+run ended on 2012-06-
+
+
+

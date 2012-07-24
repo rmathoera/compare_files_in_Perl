@@ -1,0 +1,37 @@
+* UC4.c Find SSD Candidate Volumes: Basic three-tiered environment, 
+* with specific grouping targets. 
+*
+* SSD146:  24 array groups, 1M cylinders, raid5, FC15K, 8 disks/rank
+* FC300:    8 array groups,  4M cylinders, raid5, FC15K, 16 disks/rank
+* FC450:    1 array groups, 12M cylinders, raid5, FC15K,32 disks/rank
+
+control   recommendation=devicebygroup, 
+          runid=UC4C, 
+          grouptolerance=5; 
+
+target    SSD146, 
+          number=24, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=SSD, groupsize=8); 
+
+target    FC300, 
+          number=5, 
+          size=(cylinders=4M), 
+          type=(raid=raid5, technology=FC15K, groupsize=16); 
+
+target    FC450, 
+          number=1, 
+          size=(cylinders=3M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+* make sure non-SMS managed devices are spread over arrays groups 
+Group     pdasys, volser=pda*, target=SSD146 
+Group     pdasys, volser=pd4*, target=SSD146
+Group     public, volser=pwk*;
+Group     akpol, volser=akv*; 
+Group     akpol, volser=akm*;
+Group     ttemp, volser=ptmp*;
+ 
+
+* selected storage systems to merge 
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891); 

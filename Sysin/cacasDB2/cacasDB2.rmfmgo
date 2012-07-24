@@ -1,0 +1,47 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+
+****************************************************************************
+* 1. Open/create the project.
+Project Name = '%testprojectfolder%', 
+        mode=StartWithCSV, Trending=yes;
+
+****************************************************************************
+* 2. Start with an empty database
+DatabaseEmpty;
+
+****************************************************************************
+** 3. Run reduce.
+Reduce
+    SmfFile = '%datafolder%\rmb.rmfpack.trial.zrf',
+    CommandFile = '%testprojectfolder%\cacasualty_reduce.txt'
+    ;
+
+****************************************************************************
+** 4. Run analyze.
+Analyze
+    CommandFile = '%testprojectfolder%\cacasualty_analyze.txt'
+    ;
+
+****************************************************************************
+** 5. Add analyzed data to database.
+DatabaseAdd;
+
+****************************************************************************
+* Set Excel to autosave, and also to create a separate workbook for each chart sheet
+Excel 
+    AutoSave = Yes, 
+    SeparateWorkbooks = Yes;
+
+** 5. Set scope for subsequent reporting.
+
+ReportRange 
+    Scope= Daily;
+
+
+****************************************************************************
+** 6. Plot the dashboard
+Dashboard;

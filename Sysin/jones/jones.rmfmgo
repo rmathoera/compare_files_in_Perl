@@ -1,0 +1,97 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+
+* Set Excel to autosave, and to not create separate workbooks
+Excel AutoSave = Yes, SeparateWorkbooks = No;
+
+** Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithCSV,
+    Trending = yes,
+    ;
+
+DatabaseAdd
+    ReportFolder = '%datafolder%',
+    ; 
+
+************************************************************************
+** SET SCOPE For Subsequent Reporting (Daily) 
+
+ReportRange
+    Scope = Daily,
+    ;
+
+************************************************************************
+** Plot copy services report SRDFAStatistics (Daily) + PPRC (LSS) & XRC (LSS).
+
+ReportCopyServices
+    PPRC = LSS,
+    XRC = LSS,
+    SRDFAStatistics = Yes,
+    ;
+
+************************************************************************
+** SET SCOPE For Subsequent Reporting (Weekly) 
+
+ReportRange
+    Scope = Weekly,
+    ;
+
+************************************************************************
+** Plot copy services report SRDFAStatistics (Weekly) + PPRC (LSS) & XRC (LSS).
+
+ReportCopyServices
+    PPRC = LSS,
+    XRC = LSS,
+    SRDFAStatistics = Yes,
+    ;
+
+************************************************************************ 
+** SET SCOPE For Subsequent Reporting (Monthly) 
+
+ReportRange
+    Scope = Monthly,
+    ;
+
+************************************************************************
+** Plot copy services report SRDFAStatistics (Monthly) + PPRC (LSS) & XRC (LSS).
+
+ReportCopyServices
+    PPRC = LSS,
+    XRC = LSS,
+    SRDFAStatistics = Yes,
+    ;
+
+************************************************************************
+** SET SCOPE For Subsequent Reporting (Yearly) 
+
+ReportRange
+    Scope = Yearly,
+    ;
+
+************************************************************************
+** Plot copy services report SRDFAStatistics (Yearly) + PPRC (LSS) & XRC (LSS).
+
+ReportCopyServices
+    PPRC = LSS,
+    XRC = LSS,
+    SRDFAStatistics = Yes,
+    ;
+
+****************************************************************************
+** Generate the HTML pages.
+PublishHtml 
+    Folder = '%testprojectfolder%\HTML';
+
+****************************************************************************
+** Generate PowerPoint slides.
+PowerPoint;
+
+****************************************************************************
+CloseProject;
+
+Exit;
+****************************************************************************

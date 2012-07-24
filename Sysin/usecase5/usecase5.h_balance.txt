@@ -1,0 +1,13 @@
+* Use case 5h - checking for intelligible error codes. 
+
+control       recommendation=bestmoves,
+	      number=0,
+              runid=UC5H;
+
+* Defining target with bestmoves should return an intelligible error when uncommented
+*target	FC450; 
+
+* Not declaring a set of volsers as empty in category section should return an intelligible error when uncommented
+category unmoveable, volser=PDD*;
+
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891);      

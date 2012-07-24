@@ -1,0 +1,39 @@
+* Use case 3C - Assign storage groups in two-tiered environment, 
+* with specific grouping targets. 
+*
+* FC146:  20 array groups, 1M cylinders, raid5, FC15K, 8 disks/rank
+* FC300:  5 array groups,  4M cylinders, raid5, FC15K, 16 disks/rank
+* FC450:  1 array groups, 12M cylinders, raid5, FC15K,32 disks/rank
+* 
+* Step 1
+
+control   recommendation=group, 
+          runid=UC3C, 
+          grouptolerance=5; 
+
+target    FC146, 
+          number=20, 
+          size=(cylinders=1M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+target    FC300, 
+          number=6, 
+          size=(cylinders=4M), 
+          type=(raid=raid5, technology=FC15K, groupsize=16); 
+
+target    FC450, 
+          number=1, 
+          size=(cylinders=12M), 
+          type=(raid=raid5, technology=FC15K, groupsize=32); 
+
+* make sure non-SMS managed devices are spread over arrays groups 
+Group     pdasys, volser=pda*, target=FC146; 
+Group     pdasys, volser=pd4*, target=FC146;
+Group     public, volser=pwk*;
+Group     akpol, volser=akv*, target=FC450;
+Group     akpol, volser=akm*;
+Group     ttemp, volser=ptmp*;
+ 
+
+* selected storage systems to merge 
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891); 

@@ -1,0 +1,30 @@
+* Sample user control file: 
+*    	process Raw SMF data
+*	create compressed RMF file
+* 	create configuration file
+*
+* RMF Magic (C) 2004-2006 IntelliMagic 
+* 
+* 
+* COLLECT RMFTABLE=YES;
+PRINT TITLE='RMF Magic Reduce', pagelen=75;
+*
+* Use following for Sysplex selection (only one can be specified)
+*collect select sysplex=SYSPLXID;
+*
+* Use following for System selection (multiple systems can be specified)
+*collect select system=(STS1, AVC2);
+*
+* Use following for Interval selection (multiple intervals can be specified)
+*collect select interval=(start=(date='2003/12/28', time='00:01'), 
+*			 end=(date='2003/12/28', time='01:00'));
+*
+* Use following for to Create DMC file for each interval
+*dmc collect;
+
+
+collect select sysplex=PRODPLEX;
+
+
+* Ignore absense of 70.1 records
+MESSAGE 109, SEVERITY=4;

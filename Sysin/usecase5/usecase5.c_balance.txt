@@ -1,0 +1,10 @@
+* Use case 5c - Volsers ZR*, ZA* declared empty - no. moves=10. 
+
+control       recommendation=bestmoves,
+              number=10,
+	      runid=UC5C;
+
+category empty, volser=zr*; 
+category empty, volser=za*;
+
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891);      

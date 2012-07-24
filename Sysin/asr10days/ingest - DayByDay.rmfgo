@@ -1,0 +1,216 @@
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMIS,  
+    Trending = yes,
+    ;
+
+DatabaseEmpty;
+
+
+
+
+Trending
+	detaildays = 30
+;
+
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2011-12-29.zip',
+	File = '%datafolder%\75HF230\2011-12-29.zip',
+	File = '%datafolder%\75HW180\2011-12-29.zip',
+	File = '%datafolder%\75KF840\2011-12-29.zip',
+	File = '%datafolder%\75LW450\2011-12-29.zip',
+	File = '%datafolder%\75NB960\2011-12-29.zip',
+	File = '%datafolder%\75R4410\2011-12-29.zip',
+	File = '%datafolder%\75R4420\2011-12-29.zip',
+	File = '%datafolder%\75TH280\2011-12-29.zip',
+	File = '%datafolder%\75bbxy0\2011-12-29.zip',
+	File = '%datafolder%\75cazx1\2011-12-29.zip',
+	File = '%datafolder%\75vc750\2011-12-29.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2011-12-29.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2011-12-29.zip';
+Databaseadd;
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2011-12-30.zip',
+	File = '%datafolder%\75HF230\2011-12-30.zip',
+	File = '%datafolder%\75HW180\2011-12-30.zip',
+	File = '%datafolder%\75KF840\2011-12-30.zip',
+	File = '%datafolder%\75LW450\2011-12-30.zip',
+	File = '%datafolder%\75NB960\2011-12-30.zip',
+	File = '%datafolder%\75R4410\2011-12-30.zip',
+	File = '%datafolder%\75R4420\2011-12-30.zip',
+	File = '%datafolder%\75TH280\2011-12-30.zip',
+	File = '%datafolder%\75bbxy0\2011-12-30.zip',
+	File = '%datafolder%\75cazx1\2011-12-30.zip',
+	File = '%datafolder%\75vc750\2011-12-30.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2011-12-30.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2011-12-30.zip';
+Databaseadd;
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2011-12-31.zip',
+	File = '%datafolder%\75HF230\2011-12-31.zip',
+	File = '%datafolder%\75HW180\2011-12-31.zip',
+	File = '%datafolder%\75KF840\2011-12-31.zip',
+	File = '%datafolder%\75LW450\2011-12-31.zip',
+	File = '%datafolder%\75NB960\2011-12-31.zip',
+	File = '%datafolder%\75R4410\2011-12-31.zip',
+	File = '%datafolder%\75R4420\2011-12-31.zip',
+	File = '%datafolder%\75TH280\2011-12-31.zip',
+	File = '%datafolder%\75bbxy0\2011-12-31.zip',
+	File = '%datafolder%\75cazx1\2011-12-31.zip',
+	File = '%datafolder%\75vc750\2011-12-31.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2011-12-31.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2011-12-31.zip';
+Databaseadd;
+
+
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2012-01-01.zip',
+	File = '%datafolder%\75HF230\2012-01-01.zip',
+	File = '%datafolder%\75HW180\2012-01-01.zip',
+	File = '%datafolder%\75KF840\2012-01-01.zip',
+	File = '%datafolder%\75LW450\2012-01-01.zip',
+	File = '%datafolder%\75NB960\2012-01-01.zip',
+	File = '%datafolder%\75R4410\2012-01-01.zip',
+	File = '%datafolder%\75R4420\2012-01-01.zip',
+	File = '%datafolder%\75TH280\2012-01-01.zip',
+	File = '%datafolder%\75bbxy0\2012-01-01.zip',
+	File = '%datafolder%\75cazx1\2012-01-01.zip',
+	File = '%datafolder%\75vc750\2012-01-01.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2012-01-01.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2012-01-01.zip';
+Databaseadd;
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2012-01-02.zip',
+	File = '%datafolder%\75HF230\2012-01-02.zip',
+	File = '%datafolder%\75HW180\2012-01-02.zip',
+	File = '%datafolder%\75KF840\2012-01-02.zip',
+	File = '%datafolder%\75LW450\2012-01-02.zip',
+	File = '%datafolder%\75NB960\2012-01-02.zip',
+	File = '%datafolder%\75R4410\2012-01-02.zip',
+	File = '%datafolder%\75R4420\2012-01-02.zip',
+	File = '%datafolder%\75TH280\2012-01-02.zip',
+	File = '%datafolder%\75bbxy0\2012-01-02.zip',
+	File = '%datafolder%\75cazx1\2012-01-02.zip',
+	File = '%datafolder%\75vc750\2012-01-02.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2012-01-02.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2012-01-02.zip';
+Databaseadd;
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2012-01-03.zip',
+	File = '%datafolder%\75HF230\2012-01-03.zip',
+	File = '%datafolder%\75HW180\2012-01-03.zip',
+	File = '%datafolder%\75KF840\2012-01-03.zip',
+	File = '%datafolder%\75LW450\2012-01-03.zip',
+	File = '%datafolder%\75NB960\2012-01-03.zip',
+	File = '%datafolder%\75R4410\2012-01-03.zip',
+	File = '%datafolder%\75R4420\2012-01-03.zip',
+	File = '%datafolder%\75TH280\2012-01-03.zip',
+	File = '%datafolder%\75bbxy0\2012-01-03.zip',
+	File = '%datafolder%\75cazx1\2012-01-03.zip',
+	File = '%datafolder%\75vc750\2012-01-03.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2012-01-03.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2012-01-03.zip';
+Databaseadd;
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2012-01-04.zip',
+	File = '%datafolder%\75HF230\2012-01-04.zip',
+	File = '%datafolder%\75HW180\2012-01-04.zip',
+	File = '%datafolder%\75KF840\2012-01-04.zip',
+	File = '%datafolder%\75LW450\2012-01-04.zip',
+	File = '%datafolder%\75NB960\2012-01-04.zip',
+	File = '%datafolder%\75R4410\2012-01-04.zip',
+	File = '%datafolder%\75R4420\2012-01-04.zip',
+	File = '%datafolder%\75TH280\2012-01-04.zip',
+	File = '%datafolder%\75bbxy0\2012-01-04.zip',
+	File = '%datafolder%\75cazx1\2012-01-04.zip',
+	File = '%datafolder%\75vc750\2012-01-04.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2012-01-04.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2012-01-04.zip';
+Databaseadd;
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2012-01-05.zip',
+
+	File = '%datafolder%\75HW180\2012-01-05.zip',
+	File = '%datafolder%\75KF840\2012-01-05.zip',
+	File = '%datafolder%\75LW450\2012-01-05.zip',
+	File = '%datafolder%\75NB960\2012-01-05.zip',
+	File = '%datafolder%\75R4410\2012-01-05.zip',
+	File = '%datafolder%\75R4420\2012-01-05.zip',
+	File = '%datafolder%\75TH280\2012-01-05.zip',
+	File = '%datafolder%\75bbxy0\2012-01-05.zip',
+	File = '%datafolder%\75cazx1\2012-01-05.zip',
+	File = '%datafolder%\75vc750\2012-01-05.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2012-01-05.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2012-01-05.zip';
+Databaseadd;
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2012-01-06.zip',
+	File = '%datafolder%\75HF230\2012-01-06.zip',
+	File = '%datafolder%\75HW180\2012-01-06.zip',
+	File = '%datafolder%\75KF840\2012-01-06.zip',
+	File = '%datafolder%\75LW450\2012-01-06.zip',
+	File = '%datafolder%\75NB960\2012-01-06.zip',
+	File = '%datafolder%\75R4410\2012-01-06.zip',
+	File = '%datafolder%\75R4420\2012-01-06.zip',
+	File = '%datafolder%\75TH280\2012-01-06.zip',
+	File = '%datafolder%\75bbxy0\2012-01-06.zip',
+	File = '%datafolder%\75cazx1\2012-01-06.zip',
+	File = '%datafolder%\75vc750\2012-01-06.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2012-01-06.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2012-01-06.zip';
+Databaseadd;
+
+
+Analyze
+	CommandFile = '%datafolder%\ingest.visgo.analyze.txt',
+	File = '%datafolder%\75GH460\2012-01-07.zip',
+	File = '%datafolder%\75HF230\2012-01-07.zip',
+	File = '%datafolder%\75HW180\2012-01-07.zip',
+	File = '%datafolder%\75KF840\2012-01-07.zip',
+	File = '%datafolder%\75LW450\2012-01-07.zip',
+	File = '%datafolder%\75NB960\2012-01-07.zip',
+	File = '%datafolder%\75R4410\2012-01-07.zip',
+	File = '%datafolder%\75R4420\2012-01-07.zip',
+	File = '%datafolder%\75TH280\2012-01-07.zip',
+	File = '%datafolder%\75bbxy0\2012-01-07.zip',
+	File = '%datafolder%\75cazx1\2012-01-07.zip',
+	File = '%datafolder%\75vc750\2012-01-07.zip',
+	File = '%datafolder%\SVC_UT_CLU_001\2012-01-07.zip',
+	File = '%datafolder%\SVC_WD_CLU_001\2012-01-07.zip';
+Databaseadd;
+
+
+ReportRange
+    Scope= Daily;
+
+Dashboard;
+
+PublishHtml Folder = '%testprojectfolder%\HTML';
+
+
+ReportRange Period = 'all';
+VisionReport Focalpoint = 'Performance Overview', Output = 'CSV';
+
+CloseProject;
+****************************************************************************
+** 9. Exit out of IntelliMagic Vision 
+**     Optionally exit out of the IntelliMagic Vision application after closing the project.  This is recommended.
+
+Exit;

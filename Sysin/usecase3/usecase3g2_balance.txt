@@ -1,0 +1,34 @@
+** Use case 3G - Assign storage groups in two-tiered environment, 
+** no specific grouping targets. 
+**
+** SATA1TB-1: 20 array groups, 6M cylinders, raid5, SATA,  8 disks/rank, 
+** SATA1TB-2: 20 array groups, 3M cylinders, raid1, SATA,  8 disks/rank, 
+
+control   recommendation=devicebygroup, 
+          runid=UC3G, 
+          grouptolerance=0; 
+
+target    SATA1TB-1, 
+          number=20, 
+          size=(cylinders=6M), 
+          type=(raid=raid5, technology=SATA, groupsize=8); 
+
+target    SATA1TB-2, 
+          number=20, 
+          size=(cylinders=3M), 
+          type=(raid=raid1, technology=SATA, groupsize=8); 
+
+** make sure non-SMS managed devices are spread over arrays groups 
+** group     opensystem, group=%unk*; 
+** Group     pdasys, volser=pda*, target=FC146; 
+** Group     pdasys, volser=pd4*, target=FC146;
+** Group     public, volser=pwk*;
+** Group      akpol, volser=akv*, target=SATA1TB;
+** Group      akpol, volser=akm*;
+** Group      ttemp, volser=ptmp*;
+
+
+** selected storage systems to merge 
+* migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891); 
+
+migrate   dss=(IBM-73441, IBM-ADGZ1, IBM-AKYD1, IBM-CD871, IBM-CD891, IBM-CF701, IBM-CF711, IBM-DHBF1, IBM-DZ911, IBM-FBAR1, IBM-V4981, IBM-X0311, IBM-Y5561); 

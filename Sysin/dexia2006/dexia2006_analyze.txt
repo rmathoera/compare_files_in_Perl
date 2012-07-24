@@ -1,0 +1,89 @@
+* Template user control file:
+*     Create reports from compressed RMF file
+* Show more information for intervals with highest I/O rate
+*
+*
+* RMF Magic (C) 2004-2006 IntelliMagic
+*
+PRINT TITLE='RMF magic analyze run';
+
+*
+* control csvformat=international;
+
+ANALYZE,
+  reducerc=8; 
+
+* Define interest group, see below for more detailed examples
+interestgroup IG1,
+    select=all,
+    dmc=(top10, dss),
+    busydevice=(criterion=iorate, threshold=300),
+    top10=(criterion=iorate, type=dsslevel);
+
+* !!Note: need two empty lines above this comment!!
+*
+* Below are sample commands that you can use.
+*
+* Time selection: date and time
+*
+*interestgroup X02,
+*    select=(dss=ibm-001, group=(A*,B*)),
+*    select=(dss=ibm-002, group=(C*,B*)),
+*    interval=(start=(date='2003/07/05',time='12:00:00'),
+*              end=(date='2003/07/05',time='15:45:02')),
+*    top10=(criterion=writembs, type=devicelevel),
+*    busydevice=(criterion=writembs, threshold=2),
+*    dmc=(all,lcu)
+*    ;
+*
+* Time selection: shift only
+*
+*interestgroup X02,
+*    select=(dss=ibm-001, group=(A*,B*)),
+*    select=(dss=ibm-002, group=(C*,B*)),
+*    interval=(start=(time='12:00:00'), end=(time='15:45:02')),
+*    top10=(criterion=writembs, type=devicelevel),
+*    dmc=(top10,lcu)
+*    ;
+*
+*interestgroup XRC,
+*  limitto=(dss=(IBM-12352,IBM-24567)),
+*  select=(dss=IBM-12352,group=(GRP1**, GRP2**)),
+*  select=(dss=IBM-24567,group=(GRP1**, GRP2**)),
+*  top10=(criterion=writembs, type=devicelevel),
+*  dmc=(top10,lcu)
+*
+* limit analysis to two DSSs
+* Use storage group selection
+* OR with volume selection
+* top-10 report based on write mbyte/s, device level detail
+* Device level dmc files with interest group selected volumes
+* marked in Disk Magic
+*
+*interestgroup XRC,
+*  limitto=(dss=(IBM-12352,IBM-24567)),
+*  select=(group=(GRP001, GRP002, GRP003)),
+*  select=(volser=(vol%%1, vol%%2, DB1*, DB3*, %%DBHJ)),
+*  top10=(criterion=writembs, type=devicelevel),
+*  dmc=(topn, xrc, device);
+*
+* limit analysis to storage groups within DSS
+* top-10 based on write track
+* Disk Magic model at Lcu level
+*
+*interestgroup XRC,
+*  limitto=(dss=(IBM-12352,IBM-24567)),
+*  select=(dss=IBM-12352,group=(GRP1**, GRP2**)),
+*  select=(dss=IBM-24567,group=(GRP1**, GRP2**)),
+*  top10=(criterion=writembs, type=devicelevel),
+*  dmc=(topn, xrc, lcu);
+*
+* user defined report.  Place this command BEFORE the interestgroup 
+* commands and add 'report=(dsie)' to your interestgroup definition
+* to invoke this report.
+*
+*define report dsie, type=dss, row,
+*   title='Use fields that GUI does not have',
+*   col=(date, time, iorate, popservice, pending, poppending,
+*    iosq, popiosq, connect, popconnect, disconnect, popdisconnect);
+*

@@ -1,0 +1,89 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+
+****************************************************************************
+* 1. Open/create the project.
+Project Name = '%testprojectfolder%', 
+        mode=StartWithSMF;
+
+****************************************************************************
+* 2. Start with an empty database
+DatabaseEmpty;
+
+****************************************************************************
+* 3. Run Reduce, Analyze, and Add Data to Database for each Sysplex 
+*    (Centers 1, 3, 4 & 5)
+Reduce SmfFile = '%datafolder%\John.Deere3.zrf',
+       CommandFile = '%testprojectfolder%\johndeere_center1_reduce.txt';
+Analyze CommandFile = '%testprojectfolder%\johndeere_analyze.txt';
+DatabaseAdd ;
+
+Reduce SmfFile = '%datafolder%\John.Deere3.zrf',
+       CommandFile = '%testprojectfolder%\johndeere_center3_reduce.txt';
+Analyze CommandFile = '%testprojectfolder%\johndeere_analyze.txt';
+DatabaseAdd ;
+
+Reduce SmfFile = '%datafolder%\John.Deere3.zrf',
+       CommandFile = '%testprojectfolder%\johndeere_center4_reduce.txt';
+Analyze CommandFile = '%testprojectfolder%\johndeere_analyze.txt';
+DatabaseAdd ;
+
+Reduce SmfFile = '%datafolder%\John.Deere3.zrf',
+       CommandFile = '%testprojectfolder%\johndeere_center5_reduce.txt';
+Analyze CommandFile = '%testprojectfolder%\johndeere_analyze.txt';
+DatabaseAdd ;
+
+****************************************************************************
+* 4. Set Excel to autosave, and also to create a separate workbook for each chart sheet
+Excel AutoSave = Yes, SeparateWorkbooks = Yes;
+
+****************************************************************************
+* 5. Plot the Workload Summary for all volumes
+ReportSummary 
+        WorkloadSummary=Yes, 
+        PerformanceSummary=Yes,
+        ShowDataFromVolumes=All;
+
+****************************************************************************
+* 6. Plot FICON and directors reports
+ReportFicon
+        FCD = Yes,
+        FCDByDirector = Yes,
+        FCDISL = Yes,
+        FCDISLByDirector = Yes,
+        ;
+**
+** ADDED by JAB to regress TC-000057 on 27OCT11 
+**
+*	FCDPortConfig = Yes,
+*	LinkConfiguration = Yes;
+ 
+****************************************************************************  
+* 7. Plot the PAV reports
+ReportPAV
+        ChartsCurrent = LSS,
+        TablesCurrent = LSS,
+        Recommendations = Yes,
+        ChartsRequirements = LSS,
+        TablesRequirements = LSS;
+
+****************************************************************************
+* 8. Generate the HTML pages
+PublishHTML
+        Folder = '%testprojectfolder%\HTML';
+
+****************************************************************************
+* 9. Generate PowerPoint slides
+PowerPoint;
+
+****************************************************************************
+* 11. Close Project & Exit 
+
+CloseProject;
+Exit;
+
+****************************************************************************
+****************************************************************************

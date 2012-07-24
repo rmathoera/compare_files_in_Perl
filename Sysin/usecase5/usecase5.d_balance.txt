@@ -1,0 +1,17 @@
+* Use case 5d - Volsers ZR*, ZA* declared empty
+* no. moves=10, unmoveable volser=PDL*. 
+*
+* what if we declare something empty and unmoveable? 
+* this should eb allowed explicitly, the order of empty and unmoveable shouldn't matter
+
+control       recommendation=bestmoves,
+              number=10,
+	      runid=UC5D;
+
+category empty, volser=zr*; 
+category empty, volser=za*;
+
+* PDL * 4 of top 11 are of PDL* so we'll exclude them here.  
+category unmoveable, volser=PDL*; 
+
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891);      

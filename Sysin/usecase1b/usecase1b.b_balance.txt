@@ -1,0 +1,22 @@
+** Use case 1B.B: Migration plan for merging multiple small storage groups into one larger group
+** based on device type 3390-3/9 to 3390-9; target size defined by cylinders *seeding 
+
+
+control   recommendation=logical, 
+          runid=1BVB, 
+          grouptolerance=1; 
+
+** “MOD9”  =  9 * 1113 = 10017 cylinders
+** “MOD54” = 54 * 1113 = 60102 cylinders 
+
+target    UC1BVB, 
+          number=598,           
+          size=(cylinders=10017), 
+          type=(raid=raid5, technology=FC15K, HDDCAPACITY=146GB ); 
+
+** create one pseudo storage group. 
+** Using 3 SG from Wells... 5,990,166 cylinders
+
+group     UseCase1BvB, group=(IDAPOL, IWDPOL, PXSPOL); 
+migrate   group=UseCase1BvB; 
+

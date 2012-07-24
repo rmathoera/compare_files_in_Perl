@@ -1,0 +1,316 @@
+1                   J E S 2  J O B  L O G  --  S Y S T E M  S 0 W 1  --  N O D E  S V S C J E S 2        
+0 
+ 04.44.17 JOB08967 ---- WEDNESDAY, 12 OCT 2011 ----
+ 04.44.17 JOB08967  IRR010I  USERID IMUSGU1  IS ASSIGNED TO THIS JOB.
+ 04.44.18 JOB08967  ICH70001I IMUSGU1  LAST ACCESS AT 04:44:16 ON WEDNESDAY, OCTOBER 12, 2011
+ 04.44.18 JOB08967  $HASP373 IMUSGU1R STARTED - INIT 1    - CLASS A - SYS S0W1
+ 04.44.19 JOB08967  -                                      -----TIMINGS (MINS.)------                          -----PAGING COUNTS----
+ 04.44.19 JOB08967  -STEPNAME PROCSTEP    RC   EXCP   CONN       TCB       SRB  CLOCK          SERV  WORKLOAD  PAGE  SWAP   VIO SWAPS
+ 04.44.19 JOB08967  -CLEANUP              00     12     16       .00       .00     .0                BATCH        0     0     0     0
+ 04.47.01 JOB08967  -REDUCE               04  29841  27585      1.84       .00    2.6         12949  BATCH        1     0     0     0
+ 04.47.01 JOB08967  -IMUSGU1R ENDED.  NAME-IMUSGU1              TOTAL TCB CPU TIME=     1.84 TOTAL ELAPSED TIME=   2.7
+ 04.47.01 JOB08967  $HASP395 IMUSGU1R ENDED
+0------ JES2 JOB STATISTICS ------
+-  12 OCT 2011 JOB EXECUTION DATE
+-           90 CARDS READ
+-          312 SYSOUT PRINT RECORDS
+-            0 SYSOUT PUNCH RECORDS
+-           20 SYSOUT SPOOL KBYTES
+-         2.71 MINUTES EXECUTION TIME
+ !! END OF JES SPOOL FILE !!
+        1 //IMUSGU1R JOB ,IMUSGU1,NOTIFY=IMUSGU1,MSGLEVEL=(1,1),                  JOB08967
+          //             COND=(16,LT), Terminate if a step ends with RC>4                 
+          //             REGION=0M                                                        
+          //*                                                                             
+          //* RUN RMF MAGIC REDUCE RUN: INITIAL SMF COMPRESSION RUN                       
+          //*                                                                             
+          //* MODIFY JCL PARAMETERS FOR YOUR DATASET NAMES                                
+          //* LARGE INSTALLATIONS MAY REQUIRE MORE THAN 64 MBYTE                          
+          //*                                                                             
+        2 //   SET PROJECT=BDIENST                                                        
+        3 //   SET RUN=RCPD2         IDENTIFIER USED FOR DATASET DATABASE TABLE           
+          //*                               USE THE SAME IDENTIFIER IN $3ANALZE           
+          //*                                                                             
+        4 //   SET PRODUCT=RMFMAGIC.T630B469    WHERE THE PRODUCT IS INSTALLED            
+        5 //   SET USERHLQ=RMFMAGIC.TSUITE      YOUR USERID FOR STUDY DATASETS            
+          //*                                                                             
+          //* !!!!!  UP TO 10 SMF DATA SETS CAN BE ALLOCATED !!!!!!                       
+          //* !!!!! MODIFY SMF ALLOCATION OR SPECIFY ON CALL !!!!!                        
+          //* !!!!!    SMF DATA MUST BE SORTED PER DDNAME    !!!!!                        
+          //*                                                                             
+          //*                                                                             
+          //* (C) INTELLIMAGIC BV, THE NETHERLANDS                                        
+          //* WWW.INTELLIMAGIC.NET                                                        
+          //*                                                                             
+          //* INSTALLATION NOTES:                                                         
+          //* - MAKE SURE THAT YOUR REGION IS LARGE (64 MBYTE OR MORE)                    
+          //* - MAKE SURE THAT THE C-RUNTIME LIBRARIES ARE IN THE LINKLIST,               
+          //*   OR ADD THEM TO THE STEPLIB                                                
+          //* - WHEN YOUR INSTALLATION DOES NOT ACCEPT THE LOW LEVEL QUALIFIERS           
+          //*   YOU CAN USE                                                               
+          //*     ANY VB-255 LLQ FOR THE RMC FILE.  DO NOT USE A VBA LLQ                  
+          //*     ANY FB LLQ FOR THE RMZ FILE                                             
+          //*                                                                             
+          //*                                                                             
+        6 //CLEANUP  EXEC PGM=IEFBR14                                                     
+        7 //DBA      DD DISP=(MOD,DELETE),UNIT=SYSDA,SPACE=(TRK,0),                       
+          //            DSN=&USERHLQ..&PROJECT..&RUN..DBA                                 
+          IEFC653I SUBSTITUTION JCL - DISP=(MOD,DELETE),UNIT=SYSDA,SPACE=(TRK,0),DSN=RMFMAGIC.TSUITE.BDIENST.RCPD2.DBA
+        8 //RMC      DD DISP=(MOD,DELETE),UNIT=SYSDA,SPACE=(TRK,0),                       
+          //            DSN=&USERHLQ..&PROJECT..RMC                                       
+          IEFC653I SUBSTITUTION JCL - DISP=(MOD,DELETE),UNIT=SYSDA,SPACE=(TRK,0),DSN=RMFMAGIC.TSUITE.BDIENST.RMC
+        9 //RMZ      DD DISP=(MOD,DELETE),UNIT=SYSDA,SPACE=(TRK,0),                       
+          //            DSN=&USERHLQ..&PROJECT..RMZ                                       
+          IEFC653I SUBSTITUTION JCL - DISP=(MOD,DELETE),UNIT=SYSDA,SPACE=(TRK,0),DSN=RMFMAGIC.TSUITE.BDIENST.RMZ
+       10 //SYSPRINT DD DISP=(MOD,DELETE),UNIT=SYSDA,SPACE=(TRK,0),                       
+          //            DSN=&USERHLQ..&PROJECT..LOG                                       
+          //*                                                                             
+          IEFC653I SUBSTITUTION JCL - DISP=(MOD,DELETE),UNIT=SYSDA,SPACE=(TRK,0),DSN=RMFMAGIC.TSUITE.BDIENST.LOG
+       11 //REDUCE   EXEC PGM=RMFMAGIC,REGION=0K,PARM=REDUCE                              
+       12 //STEPLIB  DD DISP=SHR,DSN=&PRODUCT..LOAD                                       
+          IEFC653I SUBSTITUTION JCL - DISP=SHR,DSN=RMFMAGIC.T630B469.LOAD
+       13 //SMF      DD DISP=SHR,DSN=RMFMAGIC.TSUITE.BDIENST.RCP1.ZRF                     
+       14 //SMF1     DD DISP=SHR,DSN=RMFMAGIC.TSUITE.BDIENST.RCP2.ZRF                     
+       15 //SMF2     DD DISP=SHR,DSN=RMFMAGIC.TSUITE.BDIENST.RCP3.ZRF                     
+       16 //SMF3     DD DISP=SHR,DSN=RMFMAGIC.TSUITE.BDIENST.RCP4.ZRF                     
+       17 //SMF4     DD DISP=SHR,DSN=RMFMAGIC.TSUITE.BDIENST.RCE1.ZRF                     
+       18 //SMF5     DD DISP=SHR,DSN=RMFMAGIC.TSUITE.BDIENST.RCE2.ZRF                     
+          //* SMF2   DD DISP=SHR,DSN=.. OTHER DATA SET MERGED WITH DDNAME=SMF ..          
+          //* SMF3   DD DISP=SHR,DSN=.. OTHER DATA SET MERGED WITH DDNAME=SMF ..          
+          //* ..... USE UP TO 10 INPUT FILES: SMF AND SMF1 - SMF9                         
+          //* SMF9   DD DISP=SHR,DSN=.. OTHER DATA SET MERGED WITH DDNAME=SMF ..          
+       19 //LICENSE  DD DISP=SHR,DSN=&PRODUCT..JCL(LICENSE)                               
+          IEFC653I SUBSTITUTION JCL - DISP=SHR,DSN=RMFMAGIC.T630B469.JCL(LICENSE)
+       20 //HARDWARE DD DISP=SHR,DSN=&PRODUCT..HARDWARE                                   
+          //*                                                                             
+          //* ARRAY AND ARRAY01 - ARRAY18 SPECIFY EMC OR HDS ARRAY INPUT FILES            
+          //*                                                                             
+          //* EMC INPUT FILE IS THE OUTPUT FROM #SQ MIRROR                                
+          //* HDS INPUT FILE IS THE CONFIGURATION FILE IN XML FORMAT                      
+          //*                                                                             
+          IEFC653I SUBSTITUTION JCL - DISP=SHR,DSN=RMFMAGIC.T630B469.HARDWARE
+       21 //ARRAY    DD DUMMY                                                             
+          //*                                                                             
+          //*  IF SUPPLYING CAPACITY INFORMATION REPLACE //DCOLLECT DD DUMMY              
+          //*  WITH //DCOLLECT DD DISP=SHR,DSN=<DATA SET CREATED IN $1CAPCTY>             
+          //*                                                                             
+       22 //DCOLLECT DD DUMMY                                                             
+          //*DCOLLECT DD DISP=SHR,DSN=&USERHLQ..&PROJECT..CAPACITY.ZRD                    
+          //*                                                                             
+       23 //SYSPRINT DD SYSOUT=*,DCB=(LRECL=255,RECFM=VBA)                                
+       24 //LISTING  DD DCB=(LRECL=600,BLKSIZE=28000,RECFM=VBA),                          
+          //            DISP=(NEW,CATLG),UNIT=SYSDA,SPACE=(CYL,(3,3),RLSE),               
+          //            DSN=&USERHLQ..&PROJECT..LOG                                       
+          IEFC653I SUBSTITUTION JCL - DCB=(LRECL=600,BLKSIZE=28000,RECFM=VBA),DISP=(NEW,CATLG),UNIT=SYSDA,SPACE=(CYL,(3,
+          3),RLSE),DSN=RMFMAGIC.TSUITE.BDIENST.LOG
+       25 //DBA      DD DISP=(NEW,CATLG),UNIT=SYSDA,DSNTYPE=LIBRARY,                      
+          //            SPACE=(CYL,(10,50,105),RLSE),                                     
+          //            DCB=(LRECL=4096,RECFM=VB,BLKSIZE=28000),                          
+          //            DSN=&USERHLQ..&PROJECT..&RUN..DBA                                 
+          IEFC653I SUBSTITUTION JCL - DISP=(NEW,CATLG),UNIT=SYSDA,DSNTYPE=LIBRARY,SPACE=(CYL,(10,50,105),RLSE),
+          DCB=(LRECL=4096,RECFM=VB,BLKSIZE=28000),DSN=RMFMAGIC.TSUITE.BDIENST.RCPD2.DBA
+       26 //RMC      DD DISP=(NEW,CATLG),UNIT=SYSDA,                                      
+          //            SPACE=(CYL,(2,2),RLSE),                                           
+          //            DCB=(LRECL=400,RECFM=VB,BLKSIZE=27998),                           
+          //            DSN=&USERHLQ..&PROJECT..RMC                                       
+          //* NOTE: YOU NEED ABOUT 100 CYLINDERS RMZ FOR EVERY GBYTE OF RAW SMF           
+          IEFC653I SUBSTITUTION JCL - DISP=(NEW,CATLG),UNIT=SYSDA,SPACE=(CYL,(2,2),RLSE),DCB=(LRECL=400,RECFM=VB,
+          BLKSIZE=27998),DSN=RMFMAGIC.TSUITE.BDIENST.RMC
+       27 //RMZ      DD DISP=(NEW,CATLG),UNIT=SYSDA,                                      
+          //            SPACE=(CYL,(200,200),RLSE),                                       
+          //            DCB=(LRECL=4096,RECFM=FB,BLKSIZE=24576),                          
+          //            DSN=&USERHLQ..&PROJECT..RMZ                                       
+          IEFC653I SUBSTITUTION JCL - DISP=(NEW,CATLG),UNIT=SYSDA,SPACE=(CYL,(200,200),RLSE),DCB=(LRECL=4096,RECFM=FB,
+          BLKSIZE=24576),DSN=RMFMAGIC.TSUITE.BDIENST.RMZ
+       28 //SYSIN    DD DISP=SHR,DSN=&USERHLQ..&PROJECT..JCL(REDUCE)                      
+          IEFC653I SUBSTITUTION JCL - DISP=SHR,DSN=RMFMAGIC.TSUITE.BDIENST.JCL(REDUCE)
+ !! END OF JES SPOOL FILE !!
+ ICH70001I IMUSGU1  LAST ACCESS AT 04:44:16 ON WEDNESDAY, OCTOBER 12, 2011
+ IEF236I ALLOC. FOR IMUSGU1R CLEANUP
+ IGD101I SMS ALLOCATED TO DDNAME (DBA     )
+         DSN (RMFMAGIC.TSUITE.BDIENST.RCPD2.DBA           )
+         STORCLAS (USERS) MGMTCLAS (        ) DATACLAS (        )
+         VOL SER NOS= DATA21                                                                
+ IGD103I SMS ALLOCATED TO DDNAME RMC
+ IGD103I SMS ALLOCATED TO DDNAME RMZ
+ IGD103I SMS ALLOCATED TO DDNAME SYSPRINT
+ IEF142I IMUSGU1R CLEANUP - STEP WAS EXECUTED - COND CODE 0000
+ IGD105I RMFMAGIC.TSUITE.BDIENST.RCPD2.DBA            DELETED,   DDNAME=DBA     
+ IGD105I RMFMAGIC.TSUITE.BDIENST.RMC                  DELETED,   DDNAME=RMC     
+ IGD105I RMFMAGIC.TSUITE.BDIENST.RMZ                  DELETED,   DDNAME=RMZ     
+ IGD105I RMFMAGIC.TSUITE.BDIENST.LOG                  DELETED,   DDNAME=SYSPRINT
+ IEF373I STEP/CLEANUP /START 2011285.0444
+ IEF032I STEP/CLEANUP /STOP  2011285.0444 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+         VIRT:     4K  SYS:   228K  EXT:        0K  SYS:    11824K
+ IEF236I ALLOC. FOR IMUSGU1R REDUCE
+ IGD103I SMS ALLOCATED TO DDNAME STEPLIB
+ IGD103I SMS ALLOCATED TO DDNAME SMF
+ IGD103I SMS ALLOCATED TO DDNAME SMF1
+ IGD103I SMS ALLOCATED TO DDNAME SMF2
+ IGD103I SMS ALLOCATED TO DDNAME SMF3
+ IGD103I SMS ALLOCATED TO DDNAME SMF4
+ IGD103I SMS ALLOCATED TO DDNAME SMF5
+ IGD103I SMS ALLOCATED TO DDNAME LICENSE
+ IGD103I SMS ALLOCATED TO DDNAME HARDWARE
+ IEF237I DMY  ALLOCATED TO ARRAY
+ IEF237I DMY  ALLOCATED TO DCOLLECT
+ IEF237I JES2 ALLOCATED TO SYSPRINT
+ IGD101I SMS ALLOCATED TO DDNAME (LISTING )
+         DSN (RMFMAGIC.TSUITE.BDIENST.LOG                 )
+         STORCLAS (USERS) MGMTCLAS (        ) DATACLAS (        )
+         VOL SER NOS= DATA21                                                                
+ IGD101I SMS ALLOCATED TO DDNAME (DBA     )
+         DSN (RMFMAGIC.TSUITE.BDIENST.RCPD2.DBA           )
+         STORCLAS (USERS) MGMTCLAS (        ) DATACLAS (        )
+         VOL SER NOS= DATA18                                                                
+ IGD101I SMS ALLOCATED TO DDNAME (RMC     )
+         DSN (RMFMAGIC.TSUITE.BDIENST.RMC                 )
+         STORCLAS (USERS) MGMTCLAS (        ) DATACLAS (        )
+         VOL SER NOS= DATA14                                                                
+ IGD101I SMS ALLOCATED TO DDNAME (RMZ     )
+         DSN (RMFMAGIC.TSUITE.BDIENST.RMZ                 )
+         STORCLAS (USERS) MGMTCLAS (        ) DATACLAS (        )
+         VOL SER NOS= DATA17                                                                
+ IGD103I SMS ALLOCATED TO DDNAME SYSIN
+ IEF142I IMUSGU1R REDUCE - STEP WAS EXECUTED - COND CODE 0004
+ IGD104I RMFMAGIC.T630B469.LOAD                       RETAINED,  DDNAME=STEPLIB 
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RCP1.ZRF             RETAINED,  DDNAME=SMF     
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RCP2.ZRF             RETAINED,  DDNAME=SMF1    
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RCP3.ZRF             RETAINED,  DDNAME=SMF2    
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RCP4.ZRF             RETAINED,  DDNAME=SMF3    
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RCE1.ZRF             RETAINED,  DDNAME=SMF4    
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RCE2.ZRF             RETAINED,  DDNAME=SMF5    
+ IGD104I RMFMAGIC.T630B469.JCL                        RETAINED,  DDNAME=LICENSE 
+ IGD104I RMFMAGIC.T630B469.HARDWARE                   RETAINED,  DDNAME=HARDWARE
+ IEF285I   IMUSGU1.IMUSGU1R.JOB08967.D0000101.?         SYSOUT        
+ IGD104I RMFMAGIC.TSUITE.BDIENST.LOG                  RETAINED,  DDNAME=LISTING 
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RCPD2.DBA            RETAINED,  DDNAME=DBA     
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RMC                  RETAINED,  DDNAME=RMC     
+ IGD104I RMFMAGIC.TSUITE.BDIENST.RMZ                  RETAINED,  DDNAME=RMZ     
+ IGD104I RMFMAGIC.TSUITE.BDIENST.JCL                  RETAINED,  DDNAME=SYSIN   
+ IEF373I STEP/REDUCE  /START 2011285.0444
+ IEF032I STEP/REDUCE  /STOP  2011285.0447 
+         CPU:     0 HR  01 MIN  50.52 SEC    SRB:     0 HR  00 MIN  00.44 SEC    
+         VIRT:    68K  SYS:   736K  EXT:    41356K  SYS:    12920K
+ IEF375I  JOB/IMUSGU1R/START 2011285.0444
+ IEF033I  JOB/IMUSGU1R/STOP  2011285.0447 
+         CPU:     0 HR  01 MIN  50.52 SEC    SRB:     0 HR  00 MIN  00.44 SEC    
+ !! END OF JES SPOOL FILE !!
+ RMF0090N 00 Licensed to IntelliMagic
+ RMF0091N 00 For development support
+ RMF0008N 00 Licensed for IntelliMagic Balance functions
+ RMF0003N 00 Copyright (C) 2003 - 2011 IntelliMagic, The Netherlands
+ RMF0007N 00 IntelliMagic BV, The Netherlands, www.intellimagic.net
+ RMF0004N 00 IntelliMagic Vision 6.3.0 reduce started at Wed Oct 12 04:44:21 2011
+0RMF0103N 00 RMF interval: 2010/08/25 00:00:00, duration 00:15:00
+ RMF0181I 04 No (port) information available in 74.7 records for FICON director  at address 0003 (Logical Switch 64)
+ RMF0181I 04 No (port) information available in 74.7 records for FICON director  at address 0004 (Logical Switch 65)
+ RMF0181I 04 No (port) information available in 74.7 records for FICON director  at address 0003 (Logical Switch 66)
+ RMF0181I 04 No (port) information available in 74.7 records for FICON director  at address 0004 (Logical Switch 67)
+ RMF0103N 00 RMF interval: 2010/08/25 00:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 00:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 00:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 01:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 01:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 01:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 01:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 02:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 02:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 02:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 02:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 03:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 03:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 03:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 03:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 04:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 04:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 04:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 04:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 05:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 05:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 05:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 05:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 06:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 06:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 06:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 06:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 07:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 07:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 07:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 07:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 08:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 08:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 08:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 08:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 09:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 09:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 09:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 09:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 10:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 10:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 10:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 10:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 11:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 11:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 11:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 11:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 12:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 12:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 12:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 12:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 13:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 13:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 13:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 13:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 14:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 14:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 14:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 14:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 15:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 15:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 15:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 15:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 16:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 16:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 16:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 16:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 17:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 17:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 17:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 17:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 18:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 18:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 18:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 18:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 19:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 19:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 19:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 19:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 20:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 20:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 20:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 20:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 21:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 21:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 21:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 21:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 22:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 22:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 22:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 22:45:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 23:00:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 23:15:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 23:30:00, duration 00:15:00
+ RMF0103N 00 RMF interval: 2010/08/25 23:45:00, duration 00:15:00
+ RMF0140N 00 Record type 70.1 available from 2010/08/25 00:00:00 to 2010/08/25 23:45:00.
+ RMF0140N 00 Record type 72.3 available from 2010/08/25 00:00:00 to 2010/08/25 23:45:00.
+ RMF0140N 00 Record type 72.4 available from 2010/08/25 00:00:00 to 2010/08/25 23:45:00.
+ RMF0140N 00 Record type 73 available from 2010/08/25 00:00:00 to 2010/08/25 23:45:00.
+ RMF0140N 00 Record type 74.1 available from 2010/08/25 00:00:00 to 2010/08/25 23:45:00.
+ RMF0140N 00 Record type 74.5 available from 2010/08/25 00:00:00 to 2010/08/25 23:45:00.
+ RMF0140N 00 Record type 75 available from 2010/08/25 00:00:00 to 2010/08/25 23:45:00.
+ RMF0140N 00 Record type 78.3 available from 2010/08/25 00:00:00 to 2010/08/25 23:45:00.
+ RMF0006I 04 IntelliMagic Vision ended at Wed Oct 12 04:47:01 2011
+ .
+ !! END OF JES SPOOL FILE !!

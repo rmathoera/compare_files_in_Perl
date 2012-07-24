@@ -1,0 +1,46 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+
+* Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF;
+
+* Run Reduce, analyze, and add data to database.
+Reduce SmfFile = '%datafolder%\td7x.zrf',
+    SecondSmfFile = '%datafolder%\td42.zrf',
+    CommandFile = '%testprojectfolder%\tdbank42_reduce.txt';
+
+Analyze CommandFile = '%testprojectfolder%\tdbank42_analyze.txt';
+
+DatabaseAdd;
+
+* Set Excel to autosave, and also to create a separate workbook for each chart sheet
+Excel AutoSave = Yes, SeparateWorkbooks = Yes;
+
+** RUN THE BREAKDOWN BY VOLUME REPORT (after release 522)
+** In BOTH DBL & IGR selects (but not possible with IGT)
+
+ReportRange
+  InterestGroup = DBL;
+
+ReportBreakdown
+  Breakdownby = Volume;
+
+ReportRange
+  InterestGroup = IGR;
+
+ReportBreakdown
+  Breakdownby = Volume;
+
+* Generate the HTML pages.
+**PublishHtml 
+**    Folder = '%testprojectfolder%\HTML';
+
+* Generate PowerPoint slides.
+**PowerPoint;
+
+* Dump the Excel files to TXT files for comparison.
+DumpXLS;

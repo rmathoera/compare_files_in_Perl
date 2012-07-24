@@ -1,0 +1,91 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+** 1. Specify the project for the script.
+* Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF,
+    Trending = yes,
+    ;
+
+****************************************************************************
+** 2. Run reduce.
+Reduce
+    SmfFile = '%datafolder%\wf.dvpplex.oct13.zrf',
+    CommandFile = '%datafolder%\reduce.txt',    
+    DcollectFile = '%datafolder%\wf.dvpplex.oct13.zrd',
+    ;
+
+****************************************************************************
+** 3. Run analyze.
+Analyze
+    CommandFile = '%datafolder%\analyze.txt',
+    ;
+
+****************************************************************************
+** 4. Add analyzed data to database.
+DatabaseAdd
+    ;
+
+****************************************************************************
+** 5. SET SCOPE For Subsequent Reporting (Daily)
+
+ReportRange
+    Scope = Daily,
+    ;
+
+****************************************************************************
+** 6. Plot Advanced Report (Busy Device, RAID Rank, Access Density, Dataset & EAv OUTPUTS).
+
+ReportAdvanced
+** Run Busy Device Detail
+    BusyDeviceDetail = Yes,
+
+** Run Busy Device Summary
+    BusyDeviceSummary = Yes,
+
+** Run RAID Rank Report (DSS)
+    RaidRankReport = DSS,
+
+** Run Access Density
+    AccessDensity = LSS,
+
+** Run all 6 Data Set Reporting Items
+    DatasetTop10 = Yes,
+    DatasetTable = Yes,
+    DatasetSSDReadDisc = Yes, 
+    DatasetSSDReadMiss = Yes,
+    DatasetSSDReadMissSeq = Yes,
+
+** 1) RUN EAV ELIGIBILITY BY STORAGE GROUP
+    EAVbyStorageGroup = Yes,
+
+** 2) RUN EAV ELIGIBILITY FOR VOLUME - WANT TO DESIGNATE VOL DXS593
+    EAVbyVolume = 'DXS593';
+
+****************************************************************************
+** 7. Plot FICON Port COnfiguration Report 
+
+ReportFicon
+    FCDPortConfig = Yes;
+
+****************************************************************************
+** 8. Generate the HTML pages.
+PublishHtml 
+    Folder = '%testprojectfolder%\HTML';
+
+****************************************************************************
+** 9. Generate PowerPoint slides.
+PowerPoint;
+
+****************************************************************************
+** 11. Close the project.
+CloseProject;
+
+****************************************************************************
+** 12. Exit the project.
+Exit;
+
+****************************************************************************

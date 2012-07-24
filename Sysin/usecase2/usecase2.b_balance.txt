@@ -1,0 +1,24 @@
+* Use case 2b - Migrate all selected storage systems to new single tier 
+* hardware.
+* 
+* New 300GB single tier:  24 array groups, 2M cylinders,  
+* raid5, FC15K, 8 disks/rank, group tolerance 0
+*
+
+control   recommendation=device, 
+          runid=UC2B, 
+          grouptolerance=0; 
+
+target    FC300, 
+          number=24, 
+          size=(cylinders=2M), 
+          type=(raid=raid5, technology=FC15K, groupsize=8); 
+
+* make sure non-SMS managed devices are spread over arrays groups 
+* customize this for your installation 
+group     opensys, group=%unk*; 
+
+* selected storage systems to merge 
+migrate   dss=(IBM-73441, IBM-AKYD1, IBM-CD891); 
+
+

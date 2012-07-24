@@ -1,0 +1,55 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+** 1. Specify the project for the script.
+
+* Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF,
+    Trending = Yes,
+    ;
+
+****************************************************************************
+** 2. Run reduce.
+
+Reduce SmfFile = '%datafolder%\report after fix\kroger.zrf',
+    ArrayFile = '%datafolder%\first reports\Rmfmagicstudies\EMC SRDF Mirror.txt',
+    CommandFile = '%testprojectfolder%\kroger_reduce.txt',
+    ;
+
+****************************************************************************
+** 3. Run analyze.
+Analyze
+    CommandFile = '%testprojectfolder%\kroger_analyze.txt',
+    ;
+
+****************************************************************************
+** 4. Add analyzed data to database.
+DatabaseAdd Channels = Yes;
+
+** Set Excel to autosave, and also create a separate workbook for each chart sheet
+Excel AutoSave = Yes, SeparateWorkbooks = Yes;
+
+****************************************************************************
+** 5. a. Run RAID Group Set Report (checkbox1)
+**    b. Run Create Report Page Per DSS (checkbox2)
+**    c. Run Physical Drive Activity & Mapping Reports (checkbox3)
+
+ReportAdvanced
+    RaidRankReport = DSS, 
+    PHYSICALDRIVE = Yes;
+ 
+****************************************************************************
+** 6. Close the project.
+
+CloseProject;
+
+****************************************************************************
+** 7, Exit the project.
+
+Exit;
+
+****************************************************************************
+****************************************************************************

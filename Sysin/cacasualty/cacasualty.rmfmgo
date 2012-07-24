@@ -1,0 +1,175 @@
+/**********************************************************************/
+/* RMF Magic script to automate RMF Magic runs.                       */
+/* Run from menu File -> Run Script...                                */
+/* or Run from command line as RMFM4W.EXE /s <script file>            */
+/**********************************************************************/
+** 1. Specify the project for the script.
+* Open/create the project.
+Project Name = '%testprojectfolder%',
+    Mode = StartWithSMF,
+    ;
+
+****************************************************************************
+** 2. Run reduce.
+Reduce
+    SmfFile = '%datafolder%\rmb.rmfpack.trial.zrf',
+    CommandFile = '%testprojectfolder%\cacasualty_reduce.txt'
+    ;
+
+****************************************************************************
+** 3. Run analyze.
+Analyze
+    CommandFile = '%testprojectfolder%\cacasualty_analyze.txt'
+    ;
+
+****************************************************************************
+** 4. Add analyzed data to database.
+DatabaseAdd
+    ;
+
+** Set Excel to autosave, and also create a separate workbook for each chart sheet
+Excel AutoSave = Yes, SeparateWorkbooks = Yes;
+
+****************************************************************************
+** 5. Set scope for subsequent reporting.
+
+ReportRange
+    Scope= Daily,
+    ;
+
+****************************************************************************
+** 6. Generate dashboard sheets.
+
+Dashboard
+     ;
+
+****************************************************************************
+** 7. Plot summary reports (5).
+
+ReportSummary
+     WorkloadSummary = LSS,
+     ResponseTimeComponents = LSS,
+     StorageGroup = Yes,
+     PerformanceSummary = LSS,
+     CachePerformance = LSS,
+     ShowDataFromVolumes = AllAndSelected,
+     ;
+
+****************************************************************************
+** 8. Plot advanced reports (3).
+
+ReportAdvanced
+    BusyDeviceDetail = Yes,
+    BusyDeviceSummary = Yes,
+    AccessDensity = LSS,
+    ;
+
+****************************************************************************
+** 9. Plot breakdown reports (5).
+**   In case you want to make a breakdown report for more than one BreakdownBy 
+**   option, repeat the ReportBreakDown command for each BreakdownBy option.
+**   For instance, to create link and rank charts for each disk subsystem in 
+**   your configuration, you would code two ReportBreakdown commands for
+**   each disk subsystem.
+
+ReportBreakdown
+    BreakdownBy = StorageGroup,
+*    ChartType = Bar, 
+    ShowDataFromVolumes = AllAndSelected
+    ;
+
+ReportBreakdown
+    BreakdownBy = DSS,
+*    ChartType = Bar, 
+    ShowDataFromVolumes = AllAndSelected
+    ;
+
+ReportBreakdown
+    BreakdownBy = System,
+*    ChartType = Bar, 
+    ShowDataFromVolumes = AllAndSelected
+    ;
+
+ReportBreakdown
+    BreakdownBy = Sysplex,
+*    ChartType = Bar, 
+    ShowDataFromVolumes = AllAndSelected
+    ;
+
+ReportBreakdown BreakdownBy=(LSS, DSS='EMC-01894');
+
+****************************************************************************
+** 10. Plot copy services reports.
+
+*ReportCopyServices
+*    PPRC = AllOptions,
+*	;
+
+*ReportCopyServices
+*    XRC = AllOptions,
+*	;
+
+*ReportCopyServices
+*    Recommendations = SYNC,
+*	;
+
+*ReportCopyServices
+*    Recommendations = ASYNC,
+*	;
+
+*ReportCopyServices
+*    Recommendations = XRC,
+*	;
+
+*ReportCopyServices
+*    Recommendations = UNIVREPL,
+*	;
+
+****************************************************************************
+** 11. Plot FICON and directors reports.
+
+ReportFicon
+    ChannelsPerSystem = Yes,
+    ChannelsPerMIFgroup = Yes,
+    ChannelsPerDSS = Yes,
+    ;
+
+****************************************************************************
+** 12. Plot PAV reports.
+
+ReportPAV
+    ChartsCurrent = LSS,
+    TablesCurrent = LSS,
+    Recommendations = Yes,
+    ChartsRequirements = LSS,
+    TablesRequirements = LSS,
+    ;
+
+****************************************************************************
+** 14. Export results to HTML.
+**     Export the results previously created to HTML files in the specified
+**     folder.
+
+*PublishHtml Folder = <string>;
+
+****************************************************************************
+** 15. Export charts to Powerpoint.
+**     Export all charts previously created to Powerpoint.
+**     Optionally specify a template to use for the Powerpoint presentation.
+
+*PowerPoint;
+*    Template = <string>;
+
+****************************************************************************
+** 16. Close the project.
+**     Optionally close the project after running the script.
+
+CloseProject;
+
+****************************************************************************
+** 17. Exit out of IntelliMagic Vision 
+**     Optionally exit out of the IntelliMagic Vision application after closing the project.  This is recommended.
+
+Exit;
+****************************************************************************
+****************************************************************************

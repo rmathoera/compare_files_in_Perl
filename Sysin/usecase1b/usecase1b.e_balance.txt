@@ -1,0 +1,22 @@
+** Use case 1b.e: Migration plan for merging multiple small storage groups into one larger group;
+** selection based on INTERSECT of Storage Groups & DSS
+
+control   recommendation=logical, 
+          runid=1BVE, 
+          grouptolerance=1; 
+
+* “MOD3”  =  3 * 1113 =  3339 cylinders 
+* “MOD9”  =  9 * 1113 = 10017 cylinders 
+* “MOD54” = 54 * 1113 = 60102 cylinders 
+
+target    UC1BVE, 
+          number=72, 
+          size=(cylinders=60102), 
+          type=(raid=raid5, technology=FC15K, HDDCAPACITY=146GB ); 
+
+** create one pseudo storage group. 
+* Using 3 SG from Wells... 5,990,166 cylinders
+* 624 VOLSER in total;  443 w/given DSS below 
+group     UC1BvE, group=(IDAPOL, IWDPOL, PXSPOL), DSS=(IBM-CF711, IBM-DHBF1, IBM-FBAR1, IBM-X0311); 
+
+migrate   group=UC1BvE; 
