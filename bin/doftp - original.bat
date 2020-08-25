@@ -18,9 +18,6 @@ goto endofperl
 @rem ';
 #! perl
 ###########################################################BeginFile############
-# Copyright:  (c) 1999 by Consul Risk Management B.V.  All Rights Reserved
-#
-# Time-stamp: <990924 arthur 14:28 doftp.pl>
 #
 # Name:
 #   doftp.pl
