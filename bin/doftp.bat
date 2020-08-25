@@ -18,7 +18,7 @@ goto endofperl
 @rem ';
 #! perl
 ###########################################################BeginFile############
-# Copyright:  (c) 2012 by IntelliMagic B.V.  All Rights Reserved
+
 ###########################################################EndFile##############
 
 use strict;
